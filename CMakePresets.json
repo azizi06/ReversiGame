@@ -1,0 +1,38 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 30
+  },
+  "configurePresets": [
+    {
+      "name": "default",
+      "hidden": true,
+      "generator": "Ninja",              
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_CXX_STANDARD": "17",        
+        "CMAKE_C_COMPILER": "gcc",      
+        "CMAKE_CXX_COMPILER": "g++"       
+      }
+    },
+    {
+      "name": "Debug",
+      "inherits": "default",
+      "description": "Debug build",
+      "hidden": false,                     
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "Release",
+      "inherits": "default",
+      "description": "Release build",
+      "hidden": false,                    
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ]
+}

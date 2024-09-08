@@ -1,0 +1,17 @@
+REVERSIGAME/
+│
+├── src/
+│   ├── main.c
+│   ├── game_logic.c
+│   └── utils.c
+│
+├── include/
+│   ├── game_logic.h
+│   └── utils.h
+│
+├── build/
+│   └── (compiled files will go here)
+│
+├── Makefile
+│
+└── README.md
