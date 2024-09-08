@@ -35,7 +35,23 @@ void add_node(struct Map *self, int key[ROWS][COLUMNS], float value)
     self->size++;
 }
 void delete_node(struct Map *self, int key[ROWS][COLUMNS]){
-    struct Node *curent
+    struct Node *curent = self->head;
+    struct Node  *pervious = self->head;
+  
+     while ((curent != NULL) )
+     {
+      if(compare_2d_array(curent->key,key)){
+         pervious->next = curent->next;
+
+        free(curent);
+        return; 
+      }
+       pervious =curent;
+       curent = curent->next;
+      
+     }
+     
+    
 }
 void print_map(struct Map *self){
     struct Node *current = self->head;
@@ -43,9 +59,23 @@ void print_map(struct Map *self){
     while (current != NULL)
     {    
         print_matrix(current->key);      
+        printf("\nvalue  : %f",current->value);
         current = current->next;
     };
 };
+float* get_value(struct Map* self,int key[ROWS][COLUMNS]){
+    struct Node* current = self->head;
+    while(current != NULL){
+        
+        if(compare_2d_array(current->key,key)){
+           
+            return &(current->value);
+        }
+        current = current->next;
+    }
+    return NULL;
+
+}
 struct Map *map_new()
 {
     struct Map *p = malloc(sizeof(struct Map));
@@ -54,6 +84,7 @@ struct Map *map_new()
     p->add = &add_node;
     p->del = &delete_node;
     p->print = &print_map;
+    p->get = &get_value;
 
     return p;
 }

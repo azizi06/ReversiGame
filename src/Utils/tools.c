@@ -2,6 +2,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 int print_matrix(int matrix[ROWS][COLUMNS]){
+    printf("\n");
     for(int i = 0; i < ROWS;i++){
     for(int j = 0; j < ROWS;j++){
         printf("  %d  ", matrix[i][j]);

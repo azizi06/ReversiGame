@@ -15,10 +15,18 @@ int main() {
      map->add(map,m2,1);
      map->add(map,m4,4);
      map->add(map,m3,4);
-     //map->add(map,m4,89);
-    
+   
      map->print(map);
+
+     map->del(map,m2);
+    printf("\n-----------------------------------");
      
+     float* val = map->get(map,m);
+     if(val !=NULL){
+        printf("\nvalue : %f",*val);
+     }else{
+        printf("key not exist");
+     }
 
     
    
