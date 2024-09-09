@@ -11,28 +11,16 @@ int main() {
    int m3[ROWS][COLUMNS] = {3};
    int m4[ROWS][COLUMNS] = {4};
 
-   struct Set* set =new_set();
-   set->append(set,m);
-   
-   set->append(set,m);
-   set->append(set,m2);
-   set->append(set,m4);
-   set->append(set,m3);
+   struct Map* map = new_map();
+   map->add(map,m,new_move(3,4),6);
+   map->add(map,m2,new_move(3,476),3);
+   map->add(map,m3,new_move(36,4),1);
+   map->add(map,m4,new_move(3,44),99);
+   map->del(map,m4,new_move(3,44));
+   map->print(map);
 
-   printf("\nhoooooo");
-   
-   bool f = set->exists(set,m4);
-   if(f){
-      printf("\nm4 exists");
-   }else{
-      printf("m3 do not exists");
-   }
-
-   set->print(set);
-   
    printf("\n-----------------------------------");
-   delete_snode(set,m);
-   set->print(set);
+
   
 
     

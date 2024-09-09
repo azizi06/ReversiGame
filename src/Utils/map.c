@@ -3,16 +3,24 @@
 #include <stdio.h>
 #include <string.h>
 #include"tools.h"
-void add_node(struct Map *self, int key[ROWS][COLUMNS], float value)
+struct Map *new_map();
+void add_node( struct  Map *self,int state[ROWS][COLUMNS],struct Move *move,float value);
+void delete_node( struct Map *self,int state[ROWS][COLUMNS],struct Move *move);
+void print_map( struct Map* self);
+float* get_value(struct Map* self,int state[ROWS][COLUMNS],struct Move *move);
+void free_map(struct Map* map);
+
+void add_node(struct Map *self, int state[ROWS][COLUMNS],struct Move *move, float value)
 {           
     /** 
-     *  @brief  function add new node if the key not exist and update the value of the key if exists
+     *  @brief  function add new node if the state not exist and update the value of the state if exists
      */
-         // Check if the key already exists
+         // Check if the state already exists
     struct Node *current = self->head;
     while (current != NULL) {
-        if(compare_2d_array(current->key,key)){
-            current->value = value;  // Update the value if key exists
+        if(compare_2d_array(current->state,state) && is_equale_move(current->move,move)){
+            current->value = value;  // Update the value if state exists
+   
             return;
 
         }
@@ -22,32 +30,44 @@ void add_node(struct Map *self, int key[ROWS][COLUMNS], float value)
 
     // Key not found, insert a new node
     struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+
     if (newNode == NULL) {
         fprintf(stderr, "Memory allocation failed\n");
         exit(EXIT_FAILURE);
     }
+    newNode->move = new_move(move->x,move->y);
 
-    // Copy the key
-    memcpy(newNode->key, key, sizeof(newNode->key));
+    // Copy the state
+    memcpy(newNode->state, state, sizeof(newNode->state));
     newNode->value = value;
     newNode->next = self->head;  // Insert at the head of the list
     self->head = newNode;
     self->size++;
-}
-void delete_node(struct Map *self, int key[ROWS][COLUMNS]){
-    struct Node *curent = self->head;
-    struct Node  *pervious = self->head;
-  
-     while ((curent != NULL) )
-     {
-      if(compare_2d_array(curent->key,key)){
-         pervious->next = curent->next;
 
-        free(curent);
+
+}
+void delete_node(struct Map *self, int state[ROWS][COLUMNS],struct Move *move){
+    struct Node *current = self->head;
+    struct Node  *previous = NULL;
+
+     while ((current != NULL) )
+     {
+      if(compare_2d_array(current->state,state) && is_equale_move(current->move,move)){
+        if (previous == NULL)
+        {
+            self->head = current->next;
+        }else{
+            previous->next = current->next;
+        }
+        
+        
+        
+     
+        free(current);
         return; 
       }
-       pervious =curent;
-       curent = curent->next;
+       previous =current;
+       current = current->next;
       
      }
      
@@ -55,19 +75,22 @@ void delete_node(struct Map *self, int key[ROWS][COLUMNS]){
 }
 void print_map(struct Map *self){
     struct Node *current = self->head;
+
     printf("\n");
     while (current != NULL)
-    {    
-        print_matrix(current->key);      
+    { 
+        print_move(current->move);
+        print_matrix(current->state);      
         printf("\nvalue  : %f",current->value);
+        printf("-------------------------");
         current = current->next;
     };
 };
-float* get_value(struct Map* self,int key[ROWS][COLUMNS]){
+float* get_value(struct Map* self,int state[ROWS][COLUMNS],struct Move *move){
     struct Node* current = self->head;
     while(current != NULL){
         
-        if(compare_2d_array(current->key,key)){
+        if(compare_2d_array(current->state,state) && is_equale_move(current->move,move)){
            
             return &(current->value);
         }
@@ -76,7 +99,7 @@ float* get_value(struct Map* self,int key[ROWS][COLUMNS]){
     return NULL;
 
 }
-struct Map *map_new()
+struct Map *new_map()
 {
     struct Map *p = malloc(sizeof(struct Map));
     p->head = NULL;
