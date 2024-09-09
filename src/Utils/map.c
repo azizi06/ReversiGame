@@ -92,6 +92,7 @@ void free_map(struct Map *map) {
     struct Node *current = map->head;
     while (current != NULL) {
         struct Node *next = current->next;
+     
         free(current);
         current = next;
     }

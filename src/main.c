@@ -2,31 +2,38 @@
 
 #include "raylib.h"
 #include "map.h"
+#include "set.h"
 
 int main() {
    
-    struct Map *map = map_new(map);
-    int m[8][8] = {2};
-    int m2[8][8] = {7};
-    int m3[8][8] = {9};
-    int m4[8][8] = {0};
+   int m[ROWS][COLUMNS] = {0};
+   int m2[ROWS][COLUMNS] = {2};
+   int m3[ROWS][COLUMNS] = {3};
+   int m4[ROWS][COLUMNS] = {4};
 
-     map->add(map,m,6);
-     map->add(map,m2,1);
-     map->add(map,m4,4);
-     map->add(map,m3,4);
+   struct Set* set =new_set();
+   set->append(set,m);
    
-     map->print(map);
+   set->append(set,m);
+   set->append(set,m2);
+   set->append(set,m4);
+   set->append(set,m3);
 
-     map->del(map,m2);
-    printf("\n-----------------------------------");
-     
-     float* val = map->get(map,m);
-     if(val !=NULL){
-        printf("\nvalue : %f",*val);
-     }else{
-        printf("key not exist");
-     }
+   printf("\nhoooooo");
+   
+   bool f = set->exists(set,m4);
+   if(f){
+      printf("\nm4 exists");
+   }else{
+      printf("m3 do not exists");
+   }
+
+   set->print(set);
+   
+   printf("\n-----------------------------------");
+   delete_snode(set,m);
+   set->print(set);
+  
 
     
    
