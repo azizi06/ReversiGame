@@ -13,10 +13,10 @@ int main() {
 
    struct Map* map = new_map();
    map->add(map,m,new_move(3,4),6);
-   map->add(map,m2,new_move(3,476),3);
+   map->add(map,m2,new_move(10,26),3);
    map->add(map,m3,new_move(36,4),1);
    map->add(map,m4,new_move(3,44),99);
-   map->del(map,m4,new_move(3,44));
+   map->del(map,m2,new_move(10,26));
    map->print(map);
 
    printf("\n-----------------------------------");

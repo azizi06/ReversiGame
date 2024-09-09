@@ -62,7 +62,7 @@ void delete_node(struct Map *self, int state[ROWS][COLUMNS],struct Move *move){
         
         
         
-     
+        free(current->move);
         free(current);
         return; 
       }
@@ -82,7 +82,7 @@ void print_map(struct Map *self){
         print_move(current->move);
         print_matrix(current->state);      
         printf("\nvalue  : %f",current->value);
-        printf("-------------------------");
+        printf("\n-------------------------");
         current = current->next;
     };
 };
