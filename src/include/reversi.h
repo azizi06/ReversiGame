@@ -8,18 +8,23 @@
 struct Reversi
 {
     int game_matrix[ROWS][COLUMNS] ;
-    char player ;
-    bool winner;
+    int player ;
+    int winner;
+    int score_w;
+    int score_b;
     void (*move)  (struct Reversi *self,struct Move* move);
     void (*next) (struct Reversi *self);
-    void (*check_winner) (struct Reversi *self);
+    bool (*isgame_over) (struct Reversi *self);
+    void (*print) (struct Reversi *self);
     
 };
-struct Reversi* new_reversi(char player);
-struct set* avaible_actions(int game_mateix[ROWS][COLUMNS]);
+struct Reversi* new_reversi();
+struct Set* avaible_actions(int game_mateix[ROWS][COLUMNS]);
 void perform_move(struct Reversi *self,struct Move* move);
-bool check_winner(struct Reversi *self);
+bool isgame_over(struct Reversi *self);
 char next_player(struct Reversi *self);
+int count_score(struct Reversi *self,int Player);
+void print_game(struct Reversi *self);
 
 
 #endif
