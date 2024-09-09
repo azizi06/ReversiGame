@@ -6,4 +6,5 @@
 #define B   1 /**@breif Black player */
 #define P 0 /**@breif Possible Moves */
 #define H 9 /**@breif Empty cell  */
+#define None 9999
 #endif

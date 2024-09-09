@@ -6,7 +6,7 @@ struct Reversi* new_reversi();
 struct Set* avaible_actions(int game_mateix[ROWS][COLUMNS]);
 void perform_move(struct Reversi *self,struct Move* move);
 bool isgame_over(struct Reversi *self);
-char next_player(struct Reversi *self);
+int next_player(struct Reversi *self);
 int count_score(struct Reversi *self,int Player);
 void print_game(struct Reversi *self);
 
@@ -14,7 +14,7 @@ void print_game(struct Reversi *self);
 struct Reversi* new_reversi(){
     struct Reversi* r = (struct Reversi*) malloc(sizeof(struct Reversi));
     r->player = B;
-    r->winner = NULL;
+    r->winner = None;
     r->score_b = 2;
     r->score_w =2;
     r->move = &perform_move;
@@ -39,7 +39,9 @@ bool isgame_over(struct Reversi *self){
     return true;
 
 }
-char next_player(struct Reversi *self);
+int next_player(struct Reversi *self){
+    return 0;
+}
 int count_score(struct Reversi *self,int Player){
     int score_w = 0;
     int score_b = 0;
