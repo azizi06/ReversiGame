@@ -6,8 +6,8 @@ struct Reversi* new_reversi();
 struct Set* avaible_actions(int game_mateix[ROWS][COLUMNS]);
 void perform_move(struct Reversi *self,struct Move* move);
 bool isgame_over(struct Reversi *self);
-int next_player(struct Reversi *self);
-int count_score(struct Reversi *self,int Player);
+void next_player(struct Reversi *self);
+void count_score(struct Reversi *self);
 void print_game(struct Reversi *self);
 
 
@@ -21,6 +21,13 @@ struct Reversi* new_reversi(){
     r->next = &next_player;
     r->isgame_over = &isgame_over;
     r->print = &print_game;
+    r->count = &count_score;
+
+    r->game_matrix[3][3]= W;
+    r->game_matrix[3][4]= B;
+    r->game_matrix[4][3]= B;
+    r->game_matrix[4][4]= W;
+
     return r;
 }
 struct Set* avaible_actions(int game_mateix[ROWS][COLUMNS]);
@@ -39,10 +46,10 @@ bool isgame_over(struct Reversi *self){
     return true;
 
 }
-int next_player(struct Reversi *self){
-    return 0;
+void next_player(struct Reversi *self){
+    self->player = (self->player == B)? W:B;
 }
-int count_score(struct Reversi *self,int Player){
+void count_score(struct Reversi *self){
     int score_w = 0;
     int score_b = 0;
     for(int i=0;i<ROWS;i++){
@@ -56,32 +63,34 @@ int count_score(struct Reversi *self,int Player){
             
         }
     }
-
+    self->score_w = score_w;
+    self->score_b = score_b;
 }
 void print_game(struct Reversi *self){
     printf("\nGame Start...");
     printf("\nW : White player");
-    printf("\nB : Black player");
+    printf("     B : Black player");
     printf("\nP : Possible Moves");
-    printf("\n# : remaining cells");
-    printf("\n\n\n");
+    printf("     # : remaining cells");
+    printf("\nW : %d\nB : %d",self->score_w,self->score_b);
+    printf("\n\n");
     for(int i=0;i<ROWS;i++){
-        printf("\n %d\t",i);
+        printf("\n %d  ",i);
     for(int j=0;j<COLUMNS;j++){
         int value = self->game_matrix[i][j];
         switch (value)
         {
         case W:
-            printf("W\t");
+            printf("W ");
             break;
         case B:
-            printf("B\t");
+            printf("B ");
             break;
         case P:
-            printf("P\t");
+            printf("P ");
             break;
         default:
-            printf("#\t");
+            printf("# ");
             break;
         }
     }
