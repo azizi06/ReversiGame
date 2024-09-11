@@ -1,7 +1,7 @@
 #ifndef REVERSI_H
 #define REVERSI_H
 #include"map.h"
-#include"set.h"
+#include"moveset.h"
 #include "move.h"
 
 
@@ -22,12 +22,14 @@ struct Reversi
     
 };
 struct Reversi* new_reversi();
-struct Set* avaible_actions(int game_mateix[ROWS][COLUMNS]);
+struct MSet* avaible_actions(int game_matrix[ROWS][COLUMNS],int player);
 void perform_move(struct Reversi *self,struct Move* move);
 bool isgame_over(struct Reversi *self);
 void next_player(struct Reversi *self);
 void count_score(struct Reversi *self);
 void print_game(struct Reversi *self);
+bool is_valid_move(int board[ROWS][COLUMNS], int row, int col, int player);
+struct MSet* find_possible_moves(int board[ROWS][COLUMNS], int player);
 
 
 #endif

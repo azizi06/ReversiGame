@@ -11,7 +11,7 @@ void next_player(struct Reversi *self);
 void count_score(struct Reversi *self);
 void print_game(struct Reversi *self);
 bool is_valid_move(int board[ROWS][COLUMNS], int row, int col, int player);
-struct MSet* find_possible_moves(int board[ROWS][COLUMNS], int player);
+struct MSet* find_possible_moves(int board[ROWS][COLUMNS], int player, int possible_moves[ROWS * COLUMNS][2], int* num_moves);
 
 
 struct Reversi* new_reversi(){
@@ -25,11 +25,7 @@ struct Reversi* new_reversi(){
     r->isgame_over = &isgame_over;
     r->print = &print_game;
     r->count = &count_score;
-    for(int i=0;i<ROWS;i++){
-        for(int j=0;j<COLUMNS;j++){
-            r->game_matrix[i][j] = E;
-        }
-    }
+
     r->game_matrix[3][3]= W;
     r->game_matrix[3][4]= B;
     r->game_matrix[4][3]= B;
@@ -37,15 +33,23 @@ struct Reversi* new_reversi(){
 
     return r;
 }
-
+struct MSet* avaible_actions(int game_matrix[ROWS][COLUMNS],int player){
+    struct MSet* actions = new_mset();
+    for(int i=0;i<ROWS;i++){
+        for(int j=0;j<COLUMNS;j++){
+            if(game_matrix[i][j] == player){
+                struct Move* move = new_move(i,j);
+                printf("\navaible actions : ");
+                struct MSet* neigbors =  point_neighbors(game_matrix,move,player);              
+                neigbors->print(neigbors);
+             
+            }
+        }
+    }
+    return actions;
+};
 void perform_move(struct Reversi *self,struct Move* move){
-    struct MSet* avaible_actions = find_possible_moves(self->game_matrix,self->player);
-    if(avaible_actions->exists(avaible_actions,move)){
     self->game_matrix[move->x][move->y] = self->player;
-    }
-    else{
-        printf("move un avaible");
-    }
 
 }
 bool isgame_over(struct Reversi *self){
@@ -81,7 +85,11 @@ void count_score(struct Reversi *self){
     self->score_b = score_b;
 }
 void print_game(struct Reversi *self){
-    struct MSet* avaible_actions =  find_possible_moves(self->game_matrix, self->player);
+    
+    
+    int possible_moves[ROWS * COLUMNS][2];
+    int num_moves;
+    struct MSet* avaible_actions =  find_possible_moves(self->game_matrix, self->player, possible_moves, &num_moves);
     struct Move move;
     printf("\nW : White player");
     printf("     B : Black player");
@@ -89,8 +97,11 @@ void print_game(struct Reversi *self){
     printf("     # : remaining cells");
     printf("\nW : %d\nB : %d",self->score_w,self->score_b);
     avaible_actions->print(avaible_actions);
-    printf("Possible moves for player %d:\n", self->player);
-    printf("\n");
+    printf("Possible moves for player %d:\n", B);
+    for (int i = 0; i < num_moves; i++) {
+        printf("Move at: (%d, %d)\n", possible_moves[i][0], possible_moves[i][1]);
+    }
+    printf("\n\n");
     printf("    ");  
     for(int i = 0;i<COLUMNS;i++){
         printf("%d ",i);
@@ -163,13 +174,18 @@ bool is_valid_move(int board[ROWS][COLUMNS], int row, int col, int player) {
     return false;
 }
 
-struct MSet* find_possible_moves(int board[ROWS][COLUMNS], int player) {
-  
+struct MSet* find_possible_moves(int board[ROWS][COLUMNS], int player, int possible_moves[ROWS * COLUMNS][2], int* num_moves) {
+    *num_moves = 0;
     struct MSet* possible_actions = new_mset();
     for (int row = 0; row < ROWS; row++) {
         for (int col = 0; col < COLUMNS; col++) {
-            if (is_valid_move(board, row, col, player)) {     
-                possible_actions->append(possible_actions,new_move(row,col));        
+            if (is_valid_move(board, row, col, player)) {
+                possible_moves[*num_moves][0] = row;
+                possible_moves[*num_moves][1] = col;
+                possible_actions->append(possible_actions,new_move(row,col));
+                (*num_moves)++;
+
+            
             }
         }
     }

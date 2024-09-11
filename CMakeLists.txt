@@ -9,6 +9,7 @@ link_directories("C:/msys64/mingw64/lib")
 add_executable(${PROJECT_NAME} 
 src/Utils/map.c
 src/Utils/tools.c
+src/Utils/moveSet.c
 src/Utils/set.c
 src/Utils/move.c
 src/src/GameLoop.c

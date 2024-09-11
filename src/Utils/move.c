@@ -19,6 +19,6 @@ bool is_equale_move(struct Move* self,struct Move* other){
     return false;
 }
 void print_move(struct Move* self){
-    printf("\n x : %d ,y : %d",self->x,self->y);
+    printf("Move : (%d, %d)",self->x,self->y);
 }
 

@@ -4,7 +4,8 @@
 #define COLUMNS  8
 #define W  -1  /**@breif White player */
 #define B   1 /**@breif Black player */
-#define P 0 /**@breif Possible Moves */
-#define H 9 /**@breif Empty cell  */
+#define E 0 /**@breif Empty cell  */
+#define P 9 /**@breif Possible Moves */
+
 #define None 9999
 #endif
