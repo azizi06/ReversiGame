@@ -12,6 +12,8 @@ void count_score(struct Reversi *self);
 void print_game(struct Reversi *self);
 bool is_valid_move(int board[ROWS][COLUMNS], int row, int col, int player);
 struct MSet* find_possible_moves(int board[ROWS][COLUMNS], int player);
+bool is_correct_input(struct Reversi *self,int row,int col,int player);
+
 
 
 struct Reversi* new_reversi(){
@@ -39,12 +41,7 @@ struct Reversi* new_reversi(){
 }
 
 void perform_move(struct Reversi *self,struct Move* move){
-    struct MSet* avaible_actions = find_possible_moves(self->game_matrix,self->player);
-    if(!avaible_actions->exists(avaible_actions,move)){
-        printf("move un avaible");
-        avaible_actions->free(avaible_actions);
-        return;
-      }
+  
     self->game_matrix[move->x][move->y] = self->player;
     int directions[8][2] = {
         {-1, -1}, {-1, 0}, {-1, 1},
@@ -101,7 +98,12 @@ bool isgame_over(struct Reversi *self){
 
 }
 void next_player(struct Reversi *self){
-    self->player = (self->player == B)? W:B;
+    int next = (self->player == B)? W:B;
+    struct MSet* avaible_actions = find_possible_moves(self->game_matrix,next);
+    if(! avaible_actions->size == 0){
+    self->player = next;
+
+    }
 }
 void count_score(struct Reversi *self){
     int score_w = 0;
@@ -127,9 +129,8 @@ void print_game(struct Reversi *self){
     printf("     B : Black player");
     printf("\nP : Possible Moves");
     printf("     # : remaining cells");
-    printf("\nW : %d\nB : %d",self->score_w,self->score_b);
+    printf("\nW : %d\tB : %d\n",self->score_w,self->score_b);
     avaible_actions->print(avaible_actions);
-    printf("Possible moves for player %d:\n", self->player);
     printf("\n");
     printf("    ");  
     for(int i = 0;i<COLUMNS;i++){
@@ -215,4 +216,19 @@ struct MSet* find_possible_moves(int board[ROWS][COLUMNS], int player) {
     }
     return possible_actions;
 }
+bool is_correct_input(struct Reversi *self,int row,int col,int player){
+    if (row < 0 || row >= ROWS || col < 0 || col >= COLUMNS) {
+        printf("Error: Coordinates are out of bounds \n");
+        return false;
+    }
+    struct MSet* avaible_actions = find_possible_moves(self->game_matrix,self->player);
+    struct Move move = {row,col};
+    if(!avaible_actions->exists(avaible_actions,&move)){
+        printf("Error: Invalid move for the current player \n");
+        avaible_actions->free(avaible_actions);
+        return false;
+      }
+    return true;
+}
+
 
