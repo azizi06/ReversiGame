@@ -40,12 +40,52 @@ struct Reversi* new_reversi(){
 
 void perform_move(struct Reversi *self,struct Move* move){
     struct MSet* avaible_actions = find_possible_moves(self->game_matrix,self->player);
-    if(avaible_actions->exists(avaible_actions,move)){
-    self->game_matrix[move->x][move->y] = self->player;
-    }
-    else{
+    if(!avaible_actions->exists(avaible_actions,move)){
         printf("move un avaible");
+        avaible_actions->free(avaible_actions);
+        return;
+      }
+    self->game_matrix[move->x][move->y] = self->player;
+    int directions[8][2] = {
+        {-1, -1}, {-1, 0}, {-1, 1},
+        {0, -1},          {0, 1},
+        {1, -1}, {1, 0}, {1, 1}
+    };
+    int opponent = (self->player == W)? B:W;
+    for(int d= 0 ;d<8;d++){
+        int dr = directions[d][0];
+        int dc = directions[d][1];
+        int r = move->x + dr;
+        int c = move->y + dc;
+        struct MSet* remember = new_mset();
+        bool found_player = false;
+        while (r<ROWS && r>=0 && c<COLUMNS && c >=0){
+              if(self->game_matrix[r][c] == E){
+                break;
+            } 
+            else if(self->game_matrix[r][c] == opponent){
+                remember->append(remember,new_move(r,c));
+            }else if(self->game_matrix[r][c]== self->player){
+                found_player = true;
+            }   
+            r +=dr;
+            c +=dc;        
+        }
+        //marking the changes :
+        if(found_player){
+            struct msnode* current = remember->head;
+            while (current!=NULL)
+            {
+                struct Move* point = current->value;  
+                self->game_matrix[point->x][point->y] = self->player;
+                current = current->next;
+            }
+            
+        }
+        
     }
+    
+   
 
 }
 bool isgame_over(struct Reversi *self){
