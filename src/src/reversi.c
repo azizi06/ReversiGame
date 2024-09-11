@@ -109,13 +109,13 @@ void print_game(struct Reversi *self){
         switch (value)
         {
         case W:
-            printf("W ");
+            printf(ANSI_COLOR_RED"W "ANSI_RESET);
             break;
         case B:
-            printf("B ");
+            printf(ANSI_COLOR_GREEN"B "ANSI_RESET);
             break;
         case P:
-            printf("P ");
+            printf(ANSI_COLOR_BLUE"P "ANSI_RESET);
             break;
         default:
             printf("# ");
