@@ -22,7 +22,7 @@ void playWithAI(){
         game->print(game);
         
         if(game->player == W){
-        printf("\nWhite Player Turn ");
+        printf(ANSI_COLOR_RED"\nWhite Player Turn "ANSI_RESET);       
         struct Move* move = NULL;
         int attemps = 5;
         while(move == NULL && attemps > 0){    
@@ -33,7 +33,7 @@ void playWithAI(){
         printf("\nai choose move (%d,%d)",move->x,move->y);
         free(move);
         }else{
-            printf("\nBlack Player Turn ");
+            printf(ANSI_COLOR_GREEN"\nBlack Player Turn "ANSI_RESET);
             if (handel_player_input(game, input_x, input_y) == -1) {
             Quit = true;
             break;  // Quit the game
@@ -71,9 +71,9 @@ void playTwoPlayerGame(){
         int Player = game->player;
         //reading input :
         if(Player == B){
-            printf("\nBlack Player Turn ");
+            printf(ANSI_COLOR_GREEN"\nBlack Player Turn "ANSI_RESET);
         }else{
-            printf("\nWhite Player Turn ");       
+            printf(ANSI_COLOR_RED"\nWhite Player Turn "ANSI_RESET);       
         }
         if (handel_player_input(game, input_x, input_y) == -1) {
             Quit = true;

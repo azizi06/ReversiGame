@@ -129,7 +129,7 @@ void print_game(struct Reversi *self){
     printf("     B : Black player");
     printf("\nP : Possible Moves");
     printf("     # : remaining cells");
-    printf("\nW : %d\tB : %d\n",self->score_w,self->score_b);
+    printf(ANSI_COLOR_YELLOW"\nW : %d\tB : %d\n"ANSI_RESET,self->score_w,self->score_b);
     avaible_actions->print(avaible_actions);
     printf("\n");
     printf("    ");  

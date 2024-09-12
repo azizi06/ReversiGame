@@ -11,6 +11,7 @@
 #define ANSI_COLOR_GREEN "\x1b[32m"
 #define ANSI_RESET "\033[0m"
 #define ANSI_BACKGROUND_BULE "\033[0;44m"
+#define ANSI_COLOR_YELLOW  "\033[0;33m"
 
 #define None 9999
 #endif
