@@ -140,7 +140,7 @@ void twoBotsgame(){
     if(!Quit){
         game->print(game);
         char winner[15]; 
-        (game->winner == W)? strcpy(winner, "white"):strcpy(winner, "Black");
+        (game->score_w > game->score_b)? strcpy(winner, "white"):strcpy(winner, "Black");
         printf(ANSI_COLOR_BLUE"\n%s player win"ANSI_RESET,winner);
     }else{
         printf("Quitting Game\n");
