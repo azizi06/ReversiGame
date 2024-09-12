@@ -1,6 +1,9 @@
 #include "tools.h"
 #include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
+#include"reversi.h"
+
 int print_matrix(int matrix[ROWS][COLUMNS]){
     printf("\n");
     for(int i = 0; i < ROWS;i++){
@@ -47,4 +50,36 @@ struct MSet* point_neighbors(int matrix[ROWS][COLUMNS],struct Move* move,int pla
   
     return neighbors;
 
+}
+int get_input(char *prompt, char *input_buffer, size_t buffer_size){
+    printf("%s",prompt);
+    fgets(input_buffer, buffer_size, stdin);
+    if (strncmp(input_buffer, "q", 1) == 0) {
+        printf("Quitting Game\n");
+        return -1;  // Indicates that we should quit the game
+    }
+    input_buffer[strcspn(input_buffer, "\n")] = '\0';
+    return 0;
+}
+
+int handel_player_input(struct Reversi* self,char *input_x, char *input_y){
+    int row,col;
+    while(true){
+        if(get_input("\nEnter Row : ",input_x,sizeof(input_x))== -1){
+             return -1;//Quit the game
+        }
+        if(get_input("\nEnter Col : ",input_y,sizeof(input_y))== -1){
+             return -1;//Quit the game
+        }
+        row = atoi(input_x);
+        col= atoi(input_y);
+
+        if (is_correct_input(self, row, col, self->player)) {
+            break;
+        } else {
+            printf("Invalid input. Please try again.\n");
+        }
+    }
+    //success
+    return 0;
 }

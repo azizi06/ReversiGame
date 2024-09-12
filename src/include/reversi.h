@@ -33,4 +33,5 @@ struct MSet* find_possible_moves(int board[ROWS][COLUMNS], int player);
 bool is_correct_input(struct Reversi *self,int row,int col,int player);
 
 
+
 #endif

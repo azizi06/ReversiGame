@@ -14,6 +14,7 @@ src/Utils/set.c
 src/Utils/move.c
 src/src/GameLoop.c
 src/src/reversi.c
+src/src/solver.c
 src/main.c
 )
 

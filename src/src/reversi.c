@@ -232,3 +232,4 @@ bool is_correct_input(struct Reversi *self,int row,int col,int player){
 }
 
 
+
