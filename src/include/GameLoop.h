@@ -4,5 +4,7 @@
 void playWithAI();
 void playTwoPlayerGame();
 void trainAI();
+void twoBotsgame();
+
 
 #endif

@@ -126,7 +126,7 @@ void print_game(struct Reversi *self){
     struct MSet* avaible_actions =  find_possible_moves(self->game_matrix, self->player);
     struct Move move;
     printf("\nW : White player");
-    printf("     B : Black player");
+    printf("       B : Black player");
     printf("\nP : Possible Moves");
     printf("     # : remaining cells");
     printf(ANSI_COLOR_YELLOW"\nW : %d\tB : %d\n"ANSI_RESET,self->score_w,self->score_b);
