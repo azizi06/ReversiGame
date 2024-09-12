@@ -22,13 +22,18 @@ void playWithAI(){
         game->print(game);
         
         if(game->player == W){
-        printf("\nwhite Player Turn ");
-        struct Move* move = ai->move(ai,game->game_matrix);
+        printf("\nWhite Player Turn ");
+        struct Move* move = NULL;
+        int attemps = 5;
+        while(move == NULL && attemps > 0){    
+            move = ai->move(ai,game->game_matrix);
+            printf("\n[%d]ai choosing move...",attemps);
+        } 
         game->move(game,move);
+        printf("\nai choose move (%d,%d)",move->x,move->y);
         free(move);
         }else{
             printf("\nBlack Player Turn ");
-            char c;getc(stdin);
             if (handel_player_input(game, input_x, input_y) == -1) {
             Quit = true;
             break;  // Quit the game
@@ -46,7 +51,7 @@ void playWithAI(){
         game->print(game);
         char winner[15]; 
         (game->winner == W)? strcpy(winner, "white"):strcpy(winner, "Black");
-        printf(ANSI_COLOR_BLUE"%s player win"ANSI_RESET,winner);
+        printf(ANSI_COLOR_BLUE"\n%s player win"ANSI_RESET,winner);
     }else{
         printf("Quitting Game\n");
     }
@@ -68,8 +73,7 @@ void playTwoPlayerGame(){
         if(Player == B){
             printf("\nBlack Player Turn ");
         }else{
-            printf("\nWhite Player Turn ");
-            
+            printf("\nWhite Player Turn ");       
         }
         if (handel_player_input(game, input_x, input_y) == -1) {
             Quit = true;
@@ -88,9 +92,7 @@ void playTwoPlayerGame(){
         game->print(game);
         char winner[15]; 
         (game->winner == W)? strcpy(winner, "white"):strcpy(winner, "Black");
-        printf(ANSI_COLOR_BLUE"%s player win"ANSI_RESET,winner);
-    }else{
-        printf("Quitting Game");
+        printf(ANSI_COLOR_BLUE"\n%s player win"ANSI_RESET,winner);
     }
    
     

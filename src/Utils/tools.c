@@ -68,7 +68,7 @@ int handel_player_input(struct Reversi* self,char *input_x, char *input_y){
         if(get_input("\nEnter Row : ",input_x,sizeof(input_x))== -1){
              return -1;//Quit the game
         }
-        if(get_input("\nEnter Col : ",input_y,sizeof(input_y))== -1){
+        if(get_input("Enter Col : ",input_y,sizeof(input_y))== -1){
              return -1;//Quit the game
         }
         row = atoi(input_x);

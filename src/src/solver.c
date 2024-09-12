@@ -12,7 +12,6 @@ struct Move* choose_move(struct Solver* self,int state[ROWS][COLUMNS]){
     struct MSet* avaible_actions = find_possible_moves(state,self->player); 
     struct msnode* current = avaible_actions->head;
     struct Move* move ;
-    printf("\navaible actions  size:  %d",avaible_actions->size);
 
     
     int random = (rand() % avaible_actions->size) + 1;
@@ -22,8 +21,9 @@ struct Move* choose_move(struct Solver* self,int state[ROWS][COLUMNS]){
     }
     if(current !=NULL){
         move = new_move((current->value)->x,(current->value)->y);
+        return move;
     }
-    return move;
+    return NULL;
 }
 struct Solver* new_solver(float alpha,float epsilon,int player){
     struct Solver* ai = (struct Solver*) malloc(sizeof(struct Solver));
