@@ -9,7 +9,7 @@
 
 void playWithAI();
 void playTwoPlayerGame();
-void trainAI();
+struct Solver* trainAI(int n);
 
 void playWithAI(){
     struct Reversi* game = new_reversi();
@@ -146,6 +146,52 @@ void twoBotsgame(){
         printf("Quitting Game\n");
     }
 }
-void trainAI(){
+struct Solver* trainAI(int n){
+    struct Reversi* game = new_reversi();
+    struct Solver* ai_w = new_solver(0.5,0.5,W);
+    struct Solver* ai_b = new_solver(0.5,0.5,B);
+    bool Quit = false;
+    for(int i = 0;i<= n;i++){}
+    while(game->isgame_over(game)){
+        game->print(game);
+        
+        if(game->player == W){
+            printf(ANSI_COLOR_RED"\nWhite Player Turn "ANSI_RESET);       
+            struct Move* move = NULL;
+            int attemps = 5;
+            while(move == NULL && attemps > 0){    
+                move = ai_w->move(ai_w,game->game_matrix);
+                printf("\n[%d]ai_w choosing move...",attemps);
+                attemps--;
+            } 
+            game->move(game,move);
+            printf("\nai choose move (%d,%d)",move->x,move->y);
+            free(move);
+        }else{
+            printf(ANSI_COLOR_RED"\nWhite Player Turn "ANSI_RESET);       
+            struct Move* move = NULL;
+            int attemps = 5;
+            while(move == NULL && attemps > 0){    
+                move = ai_b->move(ai_b,game->game_matrix);
+                printf("\n[%d]ai_b choosing move...",attemps);
+                attemps--;
+            } 
+            game->move(game,move);
+            printf("\nai choose move (%d,%d)",move->x,move->y);
+            free(move);
+        }
+        game->count(game);
+        //Switching Player
+        game->next(game);
+    }
+    if(!Quit){
+        game->print(game);
+        char winner[15]; 
+        (game->score_w > game->score_b)? strcpy(winner, "white"):strcpy(winner, "Black");
+        printf(ANSI_COLOR_BLUE"\n%s player win"ANSI_RESET,winner);
+    }else{
+        printf("Quitting Game\n");
+    }
+
 
 }

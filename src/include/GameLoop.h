@@ -1,9 +1,9 @@
 #ifndef GAMELOOP_H
 #define GAMELOOP_H
-
+#include "solver.h"
 void playWithAI();
 void playTwoPlayerGame();
-void trainAI();
+struct Solver* trainAI(int n);
 void twoBotsgame();
 
 

@@ -17,6 +17,7 @@ int main() {
     srand(time(NULL));
     printf("1 - to play with ai \n2 - 2 players game \n3 - Two Bots game :  \nEnter your choice : ");
     fgets(input,sizeof(input),stdin);
+    getc(stdin);
     int player = atoi(input);
     switch (player){
     case  1:
@@ -29,7 +30,7 @@ int main() {
         twoBotsgame();
         break;
     default:
-        printf("\nwrong input");
+        printf("wrong input\n");
         break;
     }
     return 0;
