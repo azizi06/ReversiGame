@@ -17,6 +17,7 @@ src/src/reversi.c
 src/src/solver.c
 src/main.c
 )
+set(CMAKE_BUILD_TYPE Debug)
 
 target_link_libraries(${PROJECT_NAME}
     raylib

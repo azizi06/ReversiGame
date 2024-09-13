@@ -15,6 +15,7 @@ struct Reversi
     int score_b;
     void (*move)  (struct Reversi *self,struct Move* move);
     void (*next) (struct Reversi *self);
+    //return false if game over true if not
     bool (*isgame_over) (struct Reversi *self);
     void (*print) (struct Reversi *self);
     void (*count) (struct Reversi *self);
@@ -31,7 +32,7 @@ void print_game(struct Reversi *self);
 bool is_valid_move(int board[ROWS][COLUMNS], int row, int col, int player);
 struct MSet* find_possible_moves(int board[ROWS][COLUMNS], int player);
 bool is_correct_input(struct Reversi *self,int row,int col,int player);
-
+void check_winner(struct Reversi *self);
 
 
 #endif

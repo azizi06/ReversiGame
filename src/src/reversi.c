@@ -14,10 +14,18 @@ bool is_valid_move(int board[ROWS][COLUMNS], int row, int col, int player);
 struct MSet* find_possible_moves(int board[ROWS][COLUMNS], int player);
 bool is_correct_input(struct Reversi *self,int row,int col,int player);
 
-
+void check_winner(struct Reversi *self);
+void check_winner(struct Reversi *self){
+ if(self->score_b > self->score_w){
+        self->winner = B;
+        }else{
+        self->winner = W;
+          }
+}   
 
 struct Reversi* new_reversi(){
     struct Reversi* r = (struct Reversi*) malloc(sizeof(struct Reversi));
+    //d
     r->player = B;
     r->winner = None;
     r->score_b = 2;
@@ -41,7 +49,7 @@ struct Reversi* new_reversi(){
 }
 
 void perform_move(struct Reversi *self,struct Move* move){
-  
+    
     self->game_matrix[move->x][move->y] = self->player;
     int directions[8][2] = {
         {-1, -1}, {-1, 0}, {-1, 1},
@@ -85,18 +93,69 @@ void perform_move(struct Reversi *self,struct Move* move){
    
 
 }
+//return false if game over true if not
 bool isgame_over(struct Reversi *self){
     int number_of_cells = ROWS*COLUMNS;
     int coverd_cells = self->score_b + self->score_w;
-    if(coverd_cells == number_of_cells){
-        return false;
-    }else if (self->score_b == 0 || self->score_w == 0)
-    {
-         return false;
+    if(coverd_cells == number_of_cells || self->score_b == 0 || self->score_w == 0){
+       return true;
     }
-    return true;
+    bool board_full = true;
+    for (int row = 0; row < ROWS; row++) {
+        for (int col = 0; col < COLUMNS; col++) {
+            if (self->game_matrix[row][col] == 0) {
+                board_full = false;
+                break;
+            }
+        }
+        if (!board_full) break;
+    }
+    if (board_full) return true;
+    if(find_possible_moves(self->game_matrix,W)->size == 0 && find_possible_moves(self->game_matrix,B)->size == 0 ){
+        return true;
+    }
+    
+    return false;
 
+}bool isgame_over2(struct Reversi* game) {
+    // Check if the board is full
+    bool board_full = true;
+    for (int row = 0; row < ROWS; row++) {
+        for (int col = 0; col < COLUMNS; col++) {
+            if (game->game_matrix[row][col] == 0) {
+                board_full = false;
+                break;
+            }
+        }
+        if (!board_full) break;
+    }
+    if (board_full) return true;
+
+    // Check if neither player can make a move
+    bool no_valid_moves = true;
+    for (int player = 1; player <= 2; player++) {
+        if (find_possible_moves(game->game_matrix, player)->size > 0) {
+            no_valid_moves = false;
+            break;
+        }
+    }
+    if (no_valid_moves) return true;
+
+    // Check if one player has no pieces left
+    int player1_count = 0;
+    int player2_count = 0;
+    for (int row = 0; row < ROWS; row++) {
+        for (int col = 0; col < COLUMNS; col++) {
+            if (game->game_matrix[row][col] == 1) player1_count++;
+            if (game->game_matrix[row][col] == 2) player2_count++;
+        }
+    }
+    if (player1_count == 0 || player2_count == 0) return true;
+
+    // If none of the above conditions are met, the game is still ongoing
+    return false;
 }
+
 void next_player(struct Reversi *self){
     int next = (self->player == B)? W:B;
     struct MSet* avaible_actions = find_possible_moves(self->game_matrix,next);
@@ -230,6 +289,7 @@ bool is_correct_input(struct Reversi *self,int row,int col,int player){
       }
     return true;
 }
+
 
 
 

@@ -83,3 +83,18 @@ int handel_player_input(struct Reversi* self,char *input_x, char *input_y){
     //success
     return 0;
 }
+void copy_2d_array(int destination[ROWS][COLUMNS], int origine[ROWS][COLUMNS]){
+    for(int i=0;i<ROWS;i++){
+        for(int j=0;j<COLUMNS;j++){
+             destination[i][j] = origine[i][j];
+        }
+    }
+}
+
+int choose_random(float p) {
+    // Generate a random float between 0 and 1
+    float r = (float)rand() / RAND_MAX;
+    
+    // Return 1 with probability p, 0 otherwise
+    return r < p ? 1 : 0;
+}

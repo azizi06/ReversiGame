@@ -8,11 +8,13 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include<time.h>
+#include<crtdbg.h>
 
 
 // Function prototypes
 
 int main() {
+    
     char input[2];
     srand(time(NULL));
     printf("1 - to play with ai \n2 - 2 players game \n3 - Two Bots game :  \nEnter your choice : ");
@@ -33,6 +35,7 @@ int main() {
         printf("wrong input\n");
         break;
     }
+    _CrtDumpMemoryLeaks();
     return 0;
 }
 
