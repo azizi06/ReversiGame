@@ -30,14 +30,12 @@ void add_node(struct Map *self, int state[ROWS][COLUMNS],struct Move *move, floa
 
     // Key not found, insert a new node
     struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
-
+    memset(newNode,0,sizeof(struct Node));
     if (newNode == NULL) {
         fprintf(stderr, "Memory allocation failed\n");
         exit(EXIT_FAILURE);
     }
     newNode->move = new_move(move->x,move->y);
-
-    // Copy the state
     memcpy(newNode->state, state, sizeof(newNode->state));
     newNode->value = value;
     newNode->next = self->head;  // Insert at the head of the list
@@ -88,6 +86,7 @@ void print_map(struct Map *self){
 };
 float* get_value(struct Map* self,int state[ROWS][COLUMNS],struct Move *move){
     struct Node* current = self->head;
+
     while(current != NULL){
         
         if(compare_2d_array(current->state,state) && is_equale_move(current->move,move)){
@@ -96,6 +95,7 @@ float* get_value(struct Map* self,int state[ROWS][COLUMNS],struct Move *move){
         }
         current = current->next;
     }
+
     return NULL;
 
 }
@@ -115,7 +115,7 @@ void free_map(struct Map *map) {
     struct Node *current = map->head;
     while (current != NULL) {
         struct Node *next = current->next;
-     
+        free(current->move);
         free(current);
         current = next;
     }

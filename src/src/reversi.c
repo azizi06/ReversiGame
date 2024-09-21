@@ -35,11 +35,12 @@ struct Reversi* new_reversi(){
     r->isgame_over = &isgame_over;
     r->print = &print_game;
     r->count = &count_score;
-    for(int i=0;i<ROWS;i++){
+     for(int i=0;i<ROWS;i++){
         for(int j=0;j<COLUMNS;j++){
             r->game_matrix[i][j] = E;
         }
-    }
+    } 
+    //memset(r->game_matrix,0,sizeof(int[ROWS][COLUMNS]));
     r->game_matrix[3][3]= W;
     r->game_matrix[3][4]= B;
     r->game_matrix[4][3]= B;
@@ -111,7 +112,18 @@ bool isgame_over(struct Reversi *self){
         if (!board_full) break;
     }
     if (board_full) return true;
-    if(find_possible_moves(self->game_matrix,W)->size == 0 && find_possible_moves(self->game_matrix,B)->size == 0 ){
+    
+    struct MSet* W_possibile_moves = find_possible_moves(self->game_matrix,W);
+    struct MSet* B_possibile_moves = find_possible_moves(self->game_matrix,B);
+   
+    int W_Nmoves = W_possibile_moves->size;
+    int B_Nmoves = B_possibile_moves->size;
+    
+    W_possibile_moves->free(W_possibile_moves);
+    B_possibile_moves->free(B_possibile_moves);
+
+
+    if(W_Nmoves == 0 && B_Nmoves == 0 ){
         return true;
     }
     
@@ -161,8 +173,8 @@ void next_player(struct Reversi *self){
     struct MSet* avaible_actions = find_possible_moves(self->game_matrix,next);
     if(! avaible_actions->size == 0){
     self->player = next;
-
     }
+    avaible_actions->free(avaible_actions);
 }
 void count_score(struct Reversi *self){
     int score_w = 0;
@@ -180,6 +192,7 @@ void count_score(struct Reversi *self){
     }
     self->score_w = score_w;
     self->score_b = score_b;
+
 }
 void print_game(struct Reversi *self){
     struct MSet* avaible_actions =  find_possible_moves(self->game_matrix, self->player);
@@ -224,6 +237,7 @@ void print_game(struct Reversi *self){
     }
 
     }
+    avaible_actions->free(avaible_actions);
 
 }
 bool is_valid_move(int board[ROWS][COLUMNS], int row, int col, int player) {
@@ -268,8 +282,9 @@ struct MSet* find_possible_moves(int board[ROWS][COLUMNS], int player) {
     struct MSet* possible_actions = new_mset();
     for (int row = 0; row < ROWS; row++) {
         for (int col = 0; col < COLUMNS; col++) {
-            if (is_valid_move(board, row, col, player)) {     
-                possible_actions->append(possible_actions,new_move(row,col));        
+            if (is_valid_move(board, row, col, player)) {   
+                struct Move* a_move = new_move(row,col);
+                possible_actions->append(possible_actions,a_move);        
             }
         }
     }
@@ -287,6 +302,7 @@ bool is_correct_input(struct Reversi *self,int row,int col,int player){
         avaible_actions->free(avaible_actions);
         return false;
       }
+    avaible_actions->free(avaible_actions);
     return true;
 }
 

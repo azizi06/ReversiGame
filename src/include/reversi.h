@@ -33,6 +33,7 @@ bool is_valid_move(int board[ROWS][COLUMNS], int row, int col, int player);
 struct MSet* find_possible_moves(int board[ROWS][COLUMNS], int player);
 bool is_correct_input(struct Reversi *self,int row,int col,int player);
 void check_winner(struct Reversi *self);
+void free();
 
 
 #endif

@@ -32,7 +32,7 @@ void append_mset(struct MSet* self, struct Move* move) {
     }
 
     struct msnode* newMSNode = (struct msnode*)malloc(sizeof(struct msnode));
-    newMSNode->value = new_move(move->x, move->y);
+    newMSNode->value = move;
     newMSNode->next = self->head;
     self->head = newMSNode;
     self->size++;
@@ -69,8 +69,12 @@ void free_mset(struct MSet* self) {
 
     while (current != NULL) {
         next_node = current->next;
+        if(current->value != NULL){
         free(current->value); // Free the move struct
+        current->value = NULL;
+        }
         free(current); // Free the node
+        current = NULL;
         current = next_node;
     }
 

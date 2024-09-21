@@ -35,7 +35,7 @@ int main() {
         printf("wrong input\n");
         break;
     }
-    _CrtDumpMemoryLeaks();
+ 
     return 0;
 }
 

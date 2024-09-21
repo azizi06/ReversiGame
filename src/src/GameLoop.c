@@ -13,7 +13,7 @@ struct Solver* trainAI(int n);
 
 void playWithAI(){
     struct Reversi* game = new_reversi();
-    struct Solver* ai = trainAI(100);
+    struct Solver* ai = trainAI(1000);
     char input_x[10];
     char input_y[10];
     bool Quit = false;
@@ -60,6 +60,8 @@ void playWithAI(){
     }else{
         printf("Quitting Game\n");
     }
+    free(game);
+    free(ai);
 }
 void playTwoPlayerGame(){
     srand(time(NULL));
@@ -150,32 +152,42 @@ void twoBotsgame(){
     }else{
         printf("Quitting Game\n");
     }
+    ai_w->free(ai_w);ai_b->free(ai_b);
+    free(game);
+    
 }
-struct Solver* trainAI(int n){
-    struct Solver* ai= new_solver(0.5,0.5,B);
-    bool Quit = false;
 
+
+
+struct Solver* trainAI(int n){
+    struct Solver* ai= new_solver(0.5,1,B);
+    bool Quit = false;
     for(int i = 0;i<= n;i++){
         printf("\nTraining ai game %d  ",i);
         struct Reversi* game = new_reversi();
         bool runing = true;
-
         while(runing){
             //game->print(game);
             ai->player = game->player;
             int old_state[ROWS][COLUMNS];
             copy_2d_array(old_state,game->game_matrix);
+
             struct Move* move =  ai->move(ai,game->game_matrix);
+
             if(move == NULL){
                 break;
             }
+ 
                 
-                game->move(game,move);                         
+                game->move(game,move); 
+      
                 int new_state[ROWS][COLUMNS];
                 copy_2d_array(new_state,game->game_matrix);
                 game->count(game);
                 game->next(game);
+
                 if(game->isgame_over(game)){
+
                     check_winner(game);
                     if(ai->player == game->winner){
                     ai->update(ai,old_state,move,new_state,1);              
@@ -184,17 +196,18 @@ struct Solver* trainAI(int n){
                     }
                     runing = false;
                     break;
-                }else{                   
-                    ai->update(ai,old_state,move,new_state,0);   
-                }
+                }else{       
 
+                    ai->update(ai,old_state,move,new_state,0); 
+
+                }
+          
          free(move);
         }
         printf("   The winner is %d",game->winner);
         free(game);   
     }
-    
 
-    return ai;
+   return ai;
 
 }

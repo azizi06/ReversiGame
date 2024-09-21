@@ -10,6 +10,7 @@ struct Solver{
     int player;
     struct Move* (*move) (struct Solver* self,int state[ROWS][COLUMNS]);
     void (*update) (struct Solver* self,int old_state[COLUMNS][ROWS],struct Move* action,int new_state[COLUMNS][ROWS],float reward);
+    void (*free) (struct Solver*self);
 
 };
 struct Solver* new_solver(float alpha,float epsilon,int player);
@@ -17,5 +18,5 @@ void update(struct Solver* self,int old_state[COLUMNS][ROWS],struct Move* action
 void update_q_value(struct Solver* self,int old_state[COLUMNS][ROWS],struct Move* action,float old_q,float reward,float future_reward);
 float best_future_reward(struct Solver* self,int state[ROWS][COLUMNS]);
 struct Move* choose_move(struct Solver* self,int state[ROWS][COLUMNS]);
-
+void free_solver(struct Solver*self);
 #endif

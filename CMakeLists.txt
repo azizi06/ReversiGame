@@ -18,7 +18,7 @@ src/src/solver.c
 src/main.c
 )
 set(CMAKE_BUILD_TYPE Debug)
-
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g")
 target_link_libraries(${PROJECT_NAME}
     raylib
     opengl32

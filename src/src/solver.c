@@ -9,16 +9,20 @@ void update(struct Solver* self,int old_state[COLUMNS][ROWS],struct Move* action
 void update_q_value(struct Solver* self,int old_state[COLUMNS][ROWS],struct Move* action,float old_q,float reward,float future_reward);
 float best_future_reward(struct Solver* self,int state[ROWS][COLUMNS]);
 struct Move* choose_move(struct Solver* self,int state[ROWS][COLUMNS]);
+void free_solver(struct Solver*self);
 
 void update(struct Solver* self,int old_state[COLUMNS][ROWS],struct Move* action,int new_state[COLUMNS][ROWS],float reward){  
- float* old = get_value(self->q,old_state,action);
  float old_q;
  float bf_reward = 0 ;
+
+ float* old = get_value(self->q,old_state,action);
  if(old == NULL){
     old_q = 0;
  }else{
     old_q = *old;
  }
+        
+
     float best_future = best_future_reward(self,new_state);
   
     bf_reward = best_future;
@@ -98,7 +102,7 @@ struct Move* choose_move(struct Solver* self, int state[ROWS][COLUMNS]) {
             x = (current->value)->x;
             y = (current->value)->y;
         }
-        printf("(random choice)");
+        //printf("(random choice)");
     } else {
         // Select move with the highest Q-value
         while (current != NULL) {
@@ -122,11 +126,12 @@ struct Move* choose_move(struct Solver* self, int state[ROWS][COLUMNS]) {
                 y = (current->value)->y;
                
             }
-            printf("(random choice)");
+           // printf("(random choice)");
             
         }
     }
     move = new_move(x,y);
+    avaible_actions->free(avaible_actions);
     return move;
 }
 
@@ -141,6 +146,7 @@ float* best_future_reward2(struct Solver* self,int state[ROWS][COLUMNS]){
             }
             current=current->next;
     }
+    avaible_actions->free(avaible_actions);
     return max_reward;
     
 }
@@ -163,7 +169,11 @@ float best_future_reward(struct Solver* self, int state[ROWS][COLUMNS]) {
     if (!found_valid_reward) {
         return 0.0;
     }
+    printf("befor avaible actions size : %f",sizeof(avaible_actions));
+    avaible_actions->free(avaible_actions);
+    printf("after avaible actions size : %f",sizeof(avaible_actions));
 
+  
     return max_reward;
 }
 
@@ -178,3 +188,7 @@ struct Solver* new_solver(float alpha,float epsilon,int player){
     return ai;
 }
 
+void free_solver(struct Solver*self){
+    free_map(self->q);
+    free(self->q);
+}
