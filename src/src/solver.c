@@ -8,7 +8,7 @@ struct Solver *new_solver(float alpha, float epsilon, int player);
 void update(struct Solver *self, int old_state[COLUMNS][ROWS], struct Move *action, int new_state[COLUMNS][ROWS], float reward);
 void update_q_value(struct Solver *self, int old_state[COLUMNS][ROWS], struct Move *action, float old_q, float reward, float future_reward);
 float best_future_reward(struct Solver *self, int state[ROWS][COLUMNS]);
-struct Move *choose_move(struct Solver *self, int state[ROWS][COLUMNS]);
+struct Move *ai_choose_move(struct Solver *self, int state[ROWS][COLUMNS]);
 void free_solver(struct Solver *self);
 
 void update(struct Solver *self, int old_state[COLUMNS][ROWS], struct Move *action, int new_state[COLUMNS][ROWS], float reward)
@@ -163,7 +163,7 @@ struct Move *choose_moveA(struct Solver *self, int state[ROWS][COLUMNS])
     free(avaible_actions);
     return move;
 }
-struct Move *choose_move(struct Solver *self, int state[ROWS][COLUMNS])
+struct Move *ai_choose_move(struct Solver *self, int state[ROWS][COLUMNS])
 {
     struct MSet *avaible_actions = find_possible_moves(state, self->player);
     if (avaible_actions->size <= 0)
@@ -288,7 +288,7 @@ struct Solver *new_solver(float alpha, float epsilon, int player)
     ai->epsilon = epsilon;
     ai->player = player;
     ai->q = new_map();
-    ai->move = &choose_move;
+   // ai->move = &choose_move;
    // ai->update = &update;
     return ai;
 }

@@ -15,7 +15,7 @@ void update_ai(struct Solver *self, int old_state[COLUMNS][ROWS], struct Move *a
 void playWithAI()
 {
     struct Reversi *game = new_reversi();
-    struct Solver *ai = trainAI(10);
+    struct Solver *ai = trainAI(10000);
     char input_x[10];
     char input_y[10];
     bool Quit = false;
@@ -32,7 +32,7 @@ void playWithAI()
             int attemps = 5;
             while (ai_move == NULL && attemps > 0)
             {
-                ai_move = ai->move(ai, game->game_matrix);
+                ai_move = ai_choose_move(ai, game->game_matrix);
                 printf("\n[%d]ai choosing move...", attemps);
                 attemps--;
             }
@@ -71,6 +71,7 @@ void playWithAI()
         printf("Quitting Game\n");
     }
     free(game);
+     free_map(ai->q);
     free(ai);
 }
 void playTwoPlayerGame()
@@ -137,7 +138,7 @@ void twoBotsgame()
             int attemps = 5;
             while (move == NULL && attemps > 0)
             {
-                move = ai_w->move(ai_w, game->game_matrix);
+                move = ai_choose_move(ai_w, game->game_matrix);
                 printf("\n[%d]ai_w choosing move...", attemps);
                 attemps--;
             }
@@ -152,7 +153,7 @@ void twoBotsgame()
             int attemps = 5;
             while (move == NULL && attemps > 0)
             {
-                move = ai_b->move(ai_b, game->game_matrix);
+                move = ai_choose_move(ai_b, game->game_matrix);
                 printf("\n[%d]ai_b choosing move...", attemps);
                 attemps--;
             }
@@ -176,9 +177,9 @@ void twoBotsgame()
     {
         printf("Quitting Game\n");
     }
-
-    ai_w->free(ai_w);
-    ai_b->free(ai_b);
+    
+    free_map(ai_w->q);
+    free_map(ai_b->q);
     free(ai_w);
     free(ai_b);
     free(game);
@@ -204,7 +205,7 @@ struct Solver *trainAI(int n)
             copy_2d_array(old_state, game->game_matrix);
            // print_matrix(old_state);
 
-            struct Move *move = ai->move(ai, game->game_matrix);
+            struct Move *move = ai_choose_move(ai, game->game_matrix);
             if (move == NULL)
             {
                 break;
@@ -225,11 +226,11 @@ struct Solver *trainAI(int n)
                 check_winner(game);
                 if (ai->player == game->winner)
                 {
-                    update_ai(ai, old_state, move, new_state, 1);
+                    //update_ai(ai, old_state, move, new_state, 1);
                 }
                 else
                 {
-                  update_ai(ai, old_state, move, new_state, -1);
+                 // update_ai(ai, old_state, move, new_state, -1);
                 }
 
                 runing = false;
@@ -240,14 +241,14 @@ struct Solver *trainAI(int n)
             }
             else{
 
-               update_ai(ai, old_state, move, new_state, 0);
+               //update_ai(ai, old_state, move, new_state, 0);
             }
 
             free(move);
             //free_matrix(old_state);
             //free_matrix(new_state);
         }
-        printf("\n   The winner is %d\n", game->winner);
+        printf("   The winner is %d", game->winner);
         
         free(game);
     }
@@ -280,7 +281,7 @@ void update_ai(struct Solver *self, int old_state[COLUMNS][ROWS], struct Move *a
     int arr[ROWS][COLUMNS] = {9999,444,44,4,4};
     int x = action->x;
     int y = action->y ;
-    printf("\nx : %d  , y :%d",x,y);
+   // printf("\nx : %d  , y :%d",x,y);
     add_node(map_add, old_state,x,y, new_value);
      //print_map(self->q);
    // update_q_value(self, old_state, action, old_q, reward, bf_reward);

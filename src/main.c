@@ -53,11 +53,12 @@ int main() {
    free_map(map);
     free(map);
  */
-struct Solver* ai= trainAI(1);
+/* struct Solver* ai= trainAI(1);
        // ai->free(ai);
     free_map(ai->q);
     free(ai);
-printf("\nhhhhhhhhhhhhhhhhhhhhhhhhhhhh\n");
+printf("\nhhhhhhhhhhhhhhhhhhhhhhhhhhhh\n"); */
+  playWithAI();
     return 0;
 }
 
