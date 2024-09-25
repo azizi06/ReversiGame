@@ -9,7 +9,7 @@ struct Solver{
     struct Map* q;
     int player;
     struct Move* (*move) (struct Solver* self,int state[ROWS][COLUMNS]);
-    void (*update) (struct Solver* self,int old_state[COLUMNS][ROWS],struct Move* action,int new_state[COLUMNS][ROWS],float reward);
+   // void (*update) (struct Solver* self,int old_state[COLUMNS][ROWS],struct Move* action,int new_state[COLUMNS][ROWS],float reward);
     void (*free) (struct Solver*self);
 
 };

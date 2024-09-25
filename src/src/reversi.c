@@ -35,6 +35,7 @@ struct Reversi* new_reversi(){
     r->isgame_over = &isgame_over;
     r->print = &print_game;
     r->count = &count_score;
+    //r->game_matrix = allocate_matrix(ROWS,COLUMNS);
      for(int i=0;i<ROWS;i++){
         for(int j=0;j<COLUMNS;j++){
             r->game_matrix[i][j] = E;
@@ -64,6 +65,7 @@ void perform_move(struct Reversi *self,struct Move* move){
         int r = move->x + dr;
         int c = move->y + dc;
         struct MSet* remember = new_mset();
+
         bool found_player = false;
         while (r<ROWS && r>=0 && c<COLUMNS && c >=0){
               if(self->game_matrix[r][c] == E){
@@ -88,6 +90,8 @@ void perform_move(struct Reversi *self,struct Move* move){
             }
             
         }
+        remember->free(remember);
+        free(remember);
         
     }
     
@@ -121,6 +125,8 @@ bool isgame_over(struct Reversi *self){
     
     W_possibile_moves->free(W_possibile_moves);
     B_possibile_moves->free(B_possibile_moves);
+    free(W_possibile_moves);
+    free(B_possibile_moves);
 
 
     if(W_Nmoves == 0 && B_Nmoves == 0 ){
@@ -175,6 +181,7 @@ void next_player(struct Reversi *self){
     self->player = next;
     }
     avaible_actions->free(avaible_actions);
+    free(avaible_actions);
 }
 void count_score(struct Reversi *self){
     int score_w = 0;
@@ -238,6 +245,7 @@ void print_game(struct Reversi *self){
 
     }
     avaible_actions->free(avaible_actions);
+    free(avaible_actions);
 
 }
 bool is_valid_move(int board[ROWS][COLUMNS], int row, int col, int player) {
@@ -303,9 +311,13 @@ bool is_correct_input(struct Reversi *self,int row,int col,int player){
         return false;
       }
     avaible_actions->free(avaible_actions);
+    free(avaible_actions);
     return true;
 }
 
 
 
-
+void free_reversi(struct Reversi* self){
+    free_matrix(self->game_matrix);
+    free(self);
+}

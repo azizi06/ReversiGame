@@ -6,5 +6,6 @@ void playTwoPlayerGame();
 struct Solver* trainAI(int n);
 void twoBotsgame();
 
+void update_ai(struct Solver *self, int old_state[COLUMNS][ROWS], struct Move *action, int new_state[COLUMNS][ROWS], float reward);
 
 #endif

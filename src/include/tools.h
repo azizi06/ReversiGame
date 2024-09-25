@@ -11,5 +11,9 @@ struct MSet* point_neighbors(int matrix[ROWS][COLUMNS],struct Move* move,int pla
 int get_input(char *prompt, char *input_buffer, size_t buffer_size);
 int handel_player_input(struct Reversi *self,char *input_x, char *input_y);
 int choose_random(float p);
+int (*allocate_matrix(int rows, int cols))[COLUMNS];
+
+// Function to free the allocated 2D array
+void free_matrix(int (*matrix)[COLUMNS]);
 
 #endif

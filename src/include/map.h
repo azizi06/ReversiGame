@@ -19,7 +19,7 @@ struct Map{
     /** 
      *  @brief  function add new node if the state not exist and update the value of the state if exists
      */
-    void (*add) (struct  Map *self,int state[ROWS][COLUMNS],struct Move *move,float value);
+    void (*add) (struct  Map *self,int state[ROWS][COLUMNS],int row,int col,float value);
      /** 
      *  @brief  function to  delete existing Node
      */
@@ -41,12 +41,12 @@ struct Map{
      * 
      */
 struct Map *new_map();
-void add_node( struct  Map *self,int state[ROWS][COLUMNS],struct Move *move,float value);
+void add_node( struct  Map *self,int state[ROWS][COLUMNS],int row,int col,float value);
 void delete_node( struct Map *self,int state[ROWS][COLUMNS],struct Move *move);
 void print_map( struct Map* self);
 float* get_value(struct Map* self,int state[ROWS][COLUMNS],struct Move *move);
 void free_map(struct Map* map);
-
+struct Node* createNode(int row ,int col, int state[ROWS][COLUMNS], float value);
 
 
 
