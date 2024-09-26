@@ -7,6 +7,7 @@
 #include "solver.h"
 #include "tools.h"
 #include "minmax.h"
+#include <time.h>
 void playWithAI();
 void playTwoPlayerGame();
 struct Solver *trainAI(int n);
@@ -361,7 +362,9 @@ void RandomPlayerWihtMinMaxAgent()
         {
             struct MSet *avaible_actions = find_possible_moves(game->game_matrix, game->player);
             struct msnode *current = avaible_actions->head;
+            srand(time(NULL));
             int random_index = rand() % avaible_actions->size;
+            printf("\n random index %d\n",random_index);
             for (int i = 0; i < random_index && current != NULL; i++)
             {
                 current = current->next;

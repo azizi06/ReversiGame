@@ -75,7 +75,7 @@ struct Move* best_move(int board[ROWS][COLUMNS], int player) {
                 perform_move(&game,action);
 
 
-                float moveValue = minimax(board, 4, false, -player);  // Depth is set to 3
+                float moveValue = minimax(board, 3, false, -player);  // Depth is set to 3
                 if (moveValue > bestValue) {
                     bestValue = moveValue;
                     bestRow =  action->x;
