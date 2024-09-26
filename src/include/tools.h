@@ -15,5 +15,5 @@ int (*allocate_matrix(int rows, int cols))[COLUMNS];
 
 // Function to free the allocated 2D array
 void free_matrix(int (*matrix)[COLUMNS]);
-
+void print_board(int board[ROWS][COLUMNS]);
 #endif

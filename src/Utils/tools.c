@@ -166,3 +166,31 @@ void **free2DArray(int **array)
     }
     free(array);
 }
+void print_board(int board[ROWS][COLUMNS]){
+    for(int i = 0;i<COLUMNS;i++){
+        printf("%d ",i);
+    }
+
+    for(int i=0;i<ROWS;i++){
+        printf("\n %d  ",i);
+        for(int j=0;j<COLUMNS;j++){
+            int value ;
+                value = board[i][j];
+            
+            switch (value)
+            {
+            case W:
+                printf(ANSI_COLOR_RED"W "ANSI_RESET);
+                break;
+            case B:
+                printf(ANSI_COLOR_GREEN"B "ANSI_RESET);
+                break;
+            case P:
+                printf(ANSI_COLOR_BLUE"P "ANSI_RESET);
+                break;
+            default:
+                printf("# ");
+                break;
+            }
+        }
+}}

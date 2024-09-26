@@ -315,8 +315,9 @@ void playWihtMinMaxAgent()
         else
         {
             printf("\nai choosing a move...\n");
-
-            struct Move *Agentmove = best_move(game->game_matrix, game->player);
+            int tmp_game_matrix[ROWS][COLUMNS] = {E};
+            copy_2d_array(tmp_game_matrix,game->game_matrix); 
+            struct Move *Agentmove = best_move(tmp_game_matrix, game->player);
             if (Agentmove == NULL)
             {
                 printf("Error No Move not fount");
@@ -379,6 +380,8 @@ void RandomPlayerWihtMinMaxAgent()
                 return;
             }
             game->move(game, &move);
+            avaible_actions->free(avaible_actions);
+            free(avaible_actions);
         }
         else
         {
