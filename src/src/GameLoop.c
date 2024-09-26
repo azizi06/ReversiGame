@@ -6,7 +6,7 @@
 #include <string.h>
 #include "solver.h"
 #include "tools.h"
-
+#include "minmax.h"
 void playWithAI();
 void playTwoPlayerGame();
 struct Solver *trainAI(int n);
@@ -58,6 +58,7 @@ void playWithAI()
         check_winner(game);
         game->next(game);
     }
+
     if (!Quit)
     {
         check_winner(game);
@@ -71,7 +72,7 @@ void playWithAI()
         printf("Quitting Game\n");
     }
     free(game);
-     free_map(ai->q);
+    free_map(ai->q);
     free(ai);
 }
 void playTwoPlayerGame()
@@ -177,7 +178,7 @@ void twoBotsgame()
     {
         printf("Quitting Game\n");
     }
-    
+
     free_map(ai_w->q);
     free_map(ai_b->q);
     free(ai_w);
@@ -200,10 +201,10 @@ struct Solver *trainAI(int n)
             // game->print(game);
             ai->player = game->player;
 
-           // int (*old_state)[COLUMNS] = allocate_matrix(ROWS, COLUMNS);
-           int old_state[ROWS][COLUMNS] = {0}; 
+            // int (*old_state)[COLUMNS] = allocate_matrix(ROWS, COLUMNS);
+            int old_state[ROWS][COLUMNS] = {0};
             copy_2d_array(old_state, game->game_matrix);
-           // print_matrix(old_state);
+            // print_matrix(old_state);
 
             struct Move *move = ai_choose_move(ai, game->game_matrix);
             if (move == NULL)
@@ -213,9 +214,9 @@ struct Solver *trainAI(int n)
 
             game->move(game, move);
 
-            //int (*new_state)[COLUMNS] =allocate_matrix(ROWS, COLUMNS);;
-           int new_state[ROWS][COLUMNS] = {0}; 
-             
+            // int (*new_state)[COLUMNS] =allocate_matrix(ROWS, COLUMNS);;
+            int new_state[ROWS][COLUMNS] = {0};
+
             copy_2d_array(new_state, game->game_matrix);
             game->count(game);
             game->next(game);
@@ -226,44 +227,44 @@ struct Solver *trainAI(int n)
                 check_winner(game);
                 if (ai->player == game->winner)
                 {
-                    //update_ai(ai, old_state, move, new_state, 1);
+                    // update_ai(ai, old_state, move, new_state, 1);
                 }
                 else
                 {
-                 // update_ai(ai, old_state, move, new_state, -1);
+                    // update_ai(ai, old_state, move, new_state, -1);
                 }
 
                 runing = false;
-                //free_matrix(old_state);
-                //free_matrix(new_state);
+                // free_matrix(old_state);
+                // free_matrix(new_state);
                 free(move);
                 break;
             }
-            else{
+            else
+            {
 
-               //update_ai(ai, old_state, move, new_state, 0);
+                // update_ai(ai, old_state, move, new_state, 0);
             }
 
             free(move);
-            //free_matrix(old_state);
-            //free_matrix(new_state);
+            // free_matrix(old_state);
+            // free_matrix(new_state);
         }
         printf("   The winner is %d", game->winner);
-        
+
         free(game);
     }
- printf("\nheeeeeeeeeeeeee");
+    printf("\nheeeeeeeeeeeeee");
     return ai;
 }
 void update_ai(struct Solver *self, int old_state[COLUMNS][ROWS], struct Move *action, int new_state[COLUMNS][ROWS], float reward)
 {
     float old_q;
     float bf_reward = 0;
-    struct Map* map_get = self->q;
-    struct Map* map_add = self->q;
+    struct Map *map_get = self->q;
+    struct Map *map_add = self->q;
 
-
-    float *old = NULL;//get_value(map_get, old_state, action);
+    float *old = NULL; // get_value(map_get, old_state, action);
     if (old == NULL)
     {
         old_q = 0;
@@ -277,12 +278,138 @@ void update_ai(struct Solver *self, int old_state[COLUMNS][ROWS], struct Move *a
 
     bf_reward = best_future;
 
-    float new_value = old_q + (self->alpha) * ((reward +bf_reward) - old_q);
-    int arr[ROWS][COLUMNS] = {9999,444,44,4,4};
+    float new_value = old_q + (self->alpha) * ((reward + bf_reward) - old_q);
+    int arr[ROWS][COLUMNS] = {9999, 444, 44, 4, 4};
     int x = action->x;
-    int y = action->y ;
-   // printf("\nx : %d  , y :%d",x,y);
-    add_node(map_add, old_state,x,y, new_value);
-     //print_map(self->q);
-   // update_q_value(self, old_state, action, old_q, reward, bf_reward);
+    int y = action->y;
+    // printf("\nx : %d  , y :%d",x,y);
+    add_node(map_add, old_state, x, y, new_value);
+    // print_map(self->q);
+    // update_q_value(self, old_state, action, old_q, reward, bf_reward);
+}
+void playWihtMinMaxAgent()
+{
+    struct Reversi *game = new_reversi();
+    int player = B;
+    char input_x[10];
+    char input_y[10];
+    bool Quit = false;
+    struct Move move;
+    while (!game->isgame_over(game))
+    {
+        game->print(game);
+        if (game->player == player)
+        {
+
+            if (handel_player_input(game, input_x, input_y) == -1)
+            {
+                Quit = true;
+                break; // Quit the game
+            }
+            // PERFORMING A MOVE :
+            move.x = atoi(input_x);
+            move.y = atoi(input_y);
+            game->move(game, &move);
+        }
+        else
+        {
+            printf("\nai choosing a move...\n");
+
+            struct Move *Agentmove = best_move(game->game_matrix, game->player);
+            if (Agentmove == NULL)
+            {
+                printf("Error No Move not fount");
+                break;
+            }
+            printf("\nai choose move :(%d,%d)", Agentmove->x, Agentmove->y);
+            game->move(game, Agentmove);
+            free(Agentmove);
+        }
+        game->count(game);
+        // Switching Player
+        check_winner(game);
+        game->next(game);
+    }
+
+    if (!Quit)
+    {
+        check_winner(game);
+        game->print(game);
+        char winner[15];
+        (game->winner == W) ? strcpy(winner, "white") : strcpy(winner, "Black");
+        printf(ANSI_COLOR_BLUE "\n%s player win" ANSI_RESET, winner);
+    }
+    else
+    {
+        printf("Quitting Game\n");
+    }
+
+    free(game);
+}
+void RandomPlayerWihtMinMaxAgent()
+{
+    struct Reversi *game = new_reversi();
+    int player = B;
+    char input_x[10];
+    char input_y[10];
+    bool Quit = false;
+    struct Move move = {-1,-1};
+    while (!game->isgame_over(game))
+    {
+        game->print(game);
+        if (game->player == player)
+        {
+            struct MSet *avaible_actions = find_possible_moves(game->game_matrix, game->player);
+            struct msnode *current = avaible_actions->head;
+            int random_index = rand() % avaible_actions->size;
+            for (int i = 0; i < random_index && current != NULL; i++)
+            {
+                current = current->next;
+            }
+            if (current != NULL)
+            {
+                move.x = (current->value)->x;
+                move.y = (current->value)->y;
+            }
+            if(move.x == -1 || move.y == -1){
+                printf("ERROR : Random Player Can Not Choose a Random Move");
+                return;
+            }
+            game->move(game, &move);
+        }
+        else
+        {
+            printf("\nai choosing a move...\n");
+
+            struct Move *Agentmove = best_move(game->game_matrix, game->player);
+            if (Agentmove == NULL)
+            {
+                printf("Error: Agent No Move not found");
+                return;
+            
+            }
+            printf("\nai choose move :(%d,%d)", Agentmove->x, Agentmove->y);
+            game->move(game, Agentmove);
+            free(Agentmove);
+        }
+        game->count(game);
+        // Switching Player
+        check_winner(game);
+        game->next(game);
+    }
+
+    if (!Quit)
+    {
+        check_winner(game);
+        game->print(game);
+        char winner[15];
+        (game->winner == W) ? strcpy(winner, "white") : strcpy(winner, "Black");
+        printf(ANSI_COLOR_BLUE "\n%s player win" ANSI_RESET, winner);
+    }
+    else
+    {
+        printf("Quitting Game\n");
+    }
+
+    free(game);
 }

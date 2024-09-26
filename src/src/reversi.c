@@ -16,6 +16,7 @@ bool is_correct_input(struct Reversi *self,int row,int col,int player);
 
 void check_winner(struct Reversi *self);
 void check_winner(struct Reversi *self){
+    self->count(self);
  if(self->score_b > self->score_w){
         self->winner = B;
         }else{
@@ -51,7 +52,7 @@ struct Reversi* new_reversi(){
 }
 
 void perform_move(struct Reversi *self,struct Move* move){
-    
+
     self->game_matrix[move->x][move->y] = self->player;
     int directions[8][2] = {
         {-1, -1}, {-1, 0}, {-1, 1},
@@ -135,7 +136,8 @@ bool isgame_over(struct Reversi *self){
     
     return false;
 
-}bool isgame_over2(struct Reversi* game) {
+}
+bool isgame_over2(struct Reversi* game) {
     // Check if the board is full
     bool board_full = true;
     for (int row = 0; row < ROWS; row++) {
