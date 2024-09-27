@@ -179,9 +179,11 @@ bool isgame_over2(struct Reversi* game) {
 void next_player(struct Reversi *self){
     int next = (self->player == B)? W:B;
     struct MSet* avaible_actions = find_possible_moves(self->game_matrix,next);
-    if(! avaible_actions->size == 0){
-    self->player = next;
+    if(!avaible_actions->size == 0){
+        self->player = next;
     }
+  // printf("The avaible actions for %d are %d self->player : %d",next,avaible_actions->size,self->player);
+     
     avaible_actions->free(avaible_actions);
     free(avaible_actions);
 }

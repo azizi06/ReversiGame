@@ -296,6 +296,7 @@ void playWihtMinMaxAgent()
     char input_y[10];
     bool Quit = false;
     struct Move move;
+    int i = 0;//Count The Number Of Moves;
     while (!game->isgame_over(game))
     {
         game->print(game);
@@ -317,7 +318,7 @@ void playWihtMinMaxAgent()
             printf("\nai choosing a move...\n");
             int tmp_game_matrix[ROWS][COLUMNS] = {E};
             copy_2d_array(tmp_game_matrix,game->game_matrix); 
-            struct Move *Agentmove = best_move(tmp_game_matrix, game->player);
+            struct Move *Agentmove = best_move(tmp_game_matrix, -player,Depth_Controller(i));
             if (Agentmove == NULL)
             {
                 printf("Error No Move not fount");
@@ -347,25 +348,28 @@ void playWihtMinMaxAgent()
     }
 
     free(game);
+
 }
-void RandomPlayerWihtMinMaxAgent()
-{
+
+int  RandomPlayerWihtMinMaxAgent(int p){
     struct Reversi *game = new_reversi();
-    int player = B;
+    int player = p;
     char input_x[10];
     char input_y[10];
     bool Quit = false;
     struct Move move = {-1,-1};
+    int i = 0;
     while (!game->isgame_over(game))
     {
-        game->print(game);
+
+        //game->print(game);
         if (game->player == player)
         {
-            struct MSet *avaible_actions = find_possible_moves(game->game_matrix, game->player);
+            struct MSet *avaible_actions = find_possible_moves(game->game_matrix, player);
             struct msnode *current = avaible_actions->head;
             srand(time(NULL));
             int random_index = rand() % avaible_actions->size;
-            printf("\n random index %d\n",random_index);
+           //printf("\n random index %d\n",random_index);
             for (int i = 0; i < random_index && current != NULL; i++)
             {
                 current = current->next;
@@ -377,7 +381,7 @@ void RandomPlayerWihtMinMaxAgent()
             }
             if(move.x == -1 || move.y == -1){
                 printf("ERROR : Random Player Can Not Choose a Random Move");
-                return;
+              
             }
             game->move(game, &move);
             avaible_actions->free(avaible_actions);
@@ -385,16 +389,17 @@ void RandomPlayerWihtMinMaxAgent()
         }
         else
         {
-            printf("\nai choosing a move...\n");
-
-            struct Move *Agentmove = best_move(game->game_matrix, game->player);
+          //  printf("\nai choosing a move...\n");
+            int tmp_game_matrix[ROWS][COLUMNS] = {E};
+            copy_2d_array(tmp_game_matrix,game->game_matrix); 
+            struct Move *Agentmove = best_move(tmp_game_matrix, -player,Depth_Controller(i));
             if (Agentmove == NULL)
             {
-                printf("Error: Agent No Move not found");
-                return;
+                printf("\nError: Agent No Move found");
+            
             
             }
-            printf("\nai choose move :(%d,%d)", Agentmove->x, Agentmove->y);
+           // printf("\nai choose move :(%d,%d)", Agentmove->x, Agentmove->y);
             game->move(game, Agentmove);
             free(Agentmove);
         }
@@ -402,6 +407,13 @@ void RandomPlayerWihtMinMaxAgent()
         // Switching Player
         check_winner(game);
         game->next(game);
+
+  /*           #ifdef _WIN32
+        system("cls");  // Windows
+    #else
+        system("clear");  // Linux/macOS
+    #endif */
+    i++;
     }
 
     if (!Quit)
@@ -416,6 +428,7 @@ void RandomPlayerWihtMinMaxAgent()
     {
         printf("Quitting Game\n");
     }
-
+    int winner = game->winner;
     free(game);
+    return winner;
 }
