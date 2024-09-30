@@ -22,7 +22,7 @@ struct MSet{
 struct MSet* new_mset();
 void append_mset(struct MSet* self,struct Move *move);
 void delete_msnode(struct MSet* self, struct Move *move);
-void free_mset(struct MSet* self);
+void free_mset(struct MSet* self);                                          
 void print_mset(struct MSet* self);
 bool exists_inmset(struct MSet* self,struct Move *move);
 void copy_mset(struct MSet* set1,struct MSet* set2);

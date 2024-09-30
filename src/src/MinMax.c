@@ -9,7 +9,7 @@
 // W min Player
 // B MAX Player
 float evaluate_board(int board[ROWS][COLUMNS], int player);
-int minimax(int board[ROWS][COLUMNS], int depth, bool maximizingPlayer, int player) ;
+float minimax(int board[ROWS][COLUMNS], int depth, bool maximizingPlayer, int player) ;
 struct Move* best_move(int board[ROWS][COLUMNS], int player,int Depth) ;
 bool is_game_over(int board[ROWS][COLUMNS]);
 struct MSet* perform_action(int game_matrix[ROWS][COLUMNS],struct Move* move,int player);
@@ -20,16 +20,15 @@ int count_stable_discs(int board[ROWS][COLUMNS], int player);
 int Depth_Controller(int i);
 int Depth_Controller(int i){
     int Depth;
-    if(i<12){Depth = 2;}
-    else if(i<20){Depth = 3;}
+    if(i<20){Depth = 3;}
     else if(i<30){Depth = 3;}
     else if(i<40){Depth = 4;}
     else { Depth = 5;}
 
-    printf("\n i : %d , Depth : %d",i,Depth);
+    //printf("\n i : %d , Depth : %d",i,Depth);
     return Depth;
 }
-int minimax(int board[ROWS][COLUMNS], int depth, bool maximizingPlayer, int player) {
+float minimax(int board[ROWS][COLUMNS], int depth, bool maximizingPlayer, int player) {
     if (depth == 0 || is_game_over(board)) {
         return evaluate_board(board, player);  // Evaluate the board if depth is 0 or game over
     }
@@ -38,16 +37,16 @@ int minimax(int board[ROWS][COLUMNS], int depth, bool maximizingPlayer, int play
     struct msnode* current = available_actions->head;
 
     if (maximizingPlayer) {
-        int maxEval = -10000;
+        float maxEval = -10000.0f;
         while (current != NULL) {
             struct Move* action = current->value;
             struct MSet* changes = perform_action(board, action, player);
             
-            int eval = minimax(board, depth - 1, false, -player);  // Recursively call minimax
+            float eval = minimax(board, depth - 1, false, -player);  // Recursively call minimax
             undo_changes(board, action, changes, -player); 
             changes->free(changes);
             free(changes);
-            if(1 == eval){printf("wining move for max player(B)"); return eval;}
+            if(1 == eval){ return eval;}
             maxEval = (eval > maxEval) ? eval : maxEval;
             current = current->next;
         }
@@ -55,12 +54,12 @@ int minimax(int board[ROWS][COLUMNS], int depth, bool maximizingPlayer, int play
         free(available_actions);
         return maxEval;
     } else {
-        int minEval = 10000;
+        float minEval = 10089.0f;
         while (current != NULL) {
             struct Move* action = current->value;
             struct MSet* changes = perform_action(board, action, player);
             
-            int eval = minimax(board, depth - 1, true, -player);  
+            float eval = minimax(board, depth - 1, true, -player);  
             undo_changes(board, action, changes, -player);  
             changes->free(changes);
             free(changes);
@@ -76,13 +75,13 @@ int minimax(int board[ROWS][COLUMNS], int depth, bool maximizingPlayer, int play
 
 //B is max player W is min player
 struct Move* best_move(int board[ROWS][COLUMNS], int player,int Depth) {
-    int bestValue ; //(player == B) ? -10000 : 10000;
+    float bestValue ; //(player == B) ? -10000 : 10000;
     if(player == B){
-        printf("\nB best value");
-        bestValue = -10000;}
+       // printf("\nB best value");
+        bestValue = -10000.0f;}
     else if(player == W){
-        printf("\nW best value");
-          bestValue = 10000;
+        //printf("\nW best value");
+          bestValue = 10000456.0f;
     }
     int bestRow = -1, bestCol = -1;
     struct MSet* available_actions = find_possible_moves(board, player);
@@ -98,13 +97,16 @@ struct Move* best_move(int board[ROWS][COLUMNS], int player,int Depth) {
         struct Move* action = current->value;
         struct MSet* changes = perform_action(board, action, player);
         
-        int moveValue = minimax(board, Depth, isMaximizing, -player);  
+        float moveValue = minimax(board, Depth, isMaximizing, -player);  
         
         undo_changes(board, action, changes, -player);  
         changes->free(changes);
         free(changes);
         if((player == B && moveValue == 1) || (player == W && moveValue == -1)){
-           return   new_move(action->x, action->y);                   
+            bestValue = moveValue;
+            bestRow = action->x;
+            bestCol = action->y;
+            break;
         }
         
       
@@ -120,7 +122,7 @@ struct Move* best_move(int board[ROWS][COLUMNS], int player,int Depth) {
 
         current = current->next;
     }
-
+    //free MSet
     available_actions->free(available_actions);
     free(available_actions);
 
@@ -128,7 +130,12 @@ struct Move* best_move(int board[ROWS][COLUMNS], int player,int Depth) {
         printf("EROOR: NO valid move found");
         return NULL;  // No valid move found
     }
+ 
 
+    FILE *fp;
+    fp = fopen("data.txt","a");
+    fprintf(fp,"\nmove (%d,%d) : value : %f",bestRow,bestCol,bestValue);  
+    fclose(fp);
     return new_move(bestRow, bestCol);  // Return the best move
 }
 
@@ -309,6 +316,7 @@ float evaluate_board(int board[ROWS][COLUMNS], int player) {
         } else if (score_w > score_b) {
             return -1.0f;  // White wins
         } else {
+            printf("game over");
             return 0.0f;   // Draw
         }
     }
@@ -353,7 +361,8 @@ float evaluate_board(int board[ROWS][COLUMNS], int player) {
     float evaluation = (score_diff * score_weight) + 
                        (stable_diff * stable_weight) + 
                        (mobility_diff * mobility_weight);
-
-    return evaluation;  // Returns a value between -1 and 1
+    if(player == W) return -evaluation;
+    else if(player == B) return evaluation;
+      // Returns a value between -1 and 1
 }
 

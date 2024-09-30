@@ -137,44 +137,7 @@ bool isgame_over(struct Reversi *self){
     return false;
 
 }
-bool isgame_over2(struct Reversi* game) {
-    // Check if the board is full
-    bool board_full = true;
-    for (int row = 0; row < ROWS; row++) {
-        for (int col = 0; col < COLUMNS; col++) {
-            if (game->game_matrix[row][col] == 0) {
-                board_full = false;
-                break;
-            }
-        }
-        if (!board_full) break;
-    }
-    if (board_full) return true;
 
-    // Check if neither player can make a move
-    bool no_valid_moves = true;
-    for (int player = 1; player <= 2; player++) {
-        if (find_possible_moves(game->game_matrix, player)->size > 0) {
-            no_valid_moves = false;
-            break;
-        }
-    }
-    if (no_valid_moves) return true;
-
-    // Check if one player has no pieces left
-    int player1_count = 0;
-    int player2_count = 0;
-    for (int row = 0; row < ROWS; row++) {
-        for (int col = 0; col < COLUMNS; col++) {
-            if (game->game_matrix[row][col] == 1) player1_count++;
-            if (game->game_matrix[row][col] == 2) player2_count++;
-        }
-    }
-    if (player1_count == 0 || player2_count == 0) return true;
-
-    // If none of the above conditions are met, the game is still ongoing
-    return false;
-}
 
 void next_player(struct Reversi *self){
     int next = (self->player == B)? W:B;

@@ -10,7 +10,7 @@
 void print_board(int board[ROWS][COLUMNS]);
 int main()
 {
-    int n = 40;
+    int n = 4;
     int player = W;
     float number_of_success = 0;
 
