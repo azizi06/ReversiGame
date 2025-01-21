@@ -6,6 +6,7 @@
 struct Reversi* new_reversi();
 struct MSet* avaible_actions(int game_matrix[ROWS][COLUMNS],int player);
 void perform_move(struct Reversi *self,struct Move* move);
+void perform_move2(int state[ROWS][COLUMNS], int player, struct Move* move);
 bool isgame_over(struct Reversi *self);
 void next_player(struct Reversi *self);
 void count_score(struct Reversi *self);
@@ -15,6 +16,7 @@ struct MSet* find_possible_moves(int board[ROWS][COLUMNS], int player);
 bool is_correct_input(struct Reversi *self,int row,int col,int player);
 
 void check_winner(struct Reversi *self);
+
 void check_winner(struct Reversi *self){
     self->count(self);
  if(self->score_b > self->score_w){
@@ -100,6 +102,60 @@ void perform_move(struct Reversi *self,struct Move* move){
 
 }
 //return false if game over true if not
+
+void perform_move2(int state[ROWS][COLUMNS], int player, struct Move* move){
+    // Update the game state with the player's move
+    state[move->x][move->y] = player;
+
+    // Directions for all 8 possible moves
+    int directions[8][2] = {
+        {-1, -1}, {-1, 0}, {-1, 1},
+        {0, -1},          {0, 1},
+        {1, -1}, {1, 0}, {1, 1}
+    };
+
+    int opponent = (player == W) ? B : W;
+
+    for (int d = 0; d < 8; d++) {
+        int dr = directions[d][0];
+        int dc = directions[d][1];
+        int r = move->x + dr;
+        int c = move->y + dc;
+
+        // Initialize a temporary list to track opponent pieces
+        struct MSet* remember = new_mset();
+        bool found_player = false;
+
+        while (r < ROWS && r >= 0 && c < COLUMNS && c >= 0) {
+            if (state[r][c] == E) {
+                break; // Empty cell, stop checking this direction
+            } else if (state[r][c] == opponent) {
+                remember->append(remember, new_move(r, c)); // Store opponent piece
+            } else if (state[r][c] == player) {
+                found_player = true; // Found the current player's piece
+                break;
+            }
+            r += dr;
+            c += dc;
+        }
+
+        // Flip opponent pieces if a valid line was found
+        if (found_player) {
+            struct msnode* current = remember->head;
+            while (current != NULL) {
+                struct Move* point = current->value;
+                state[point->x][point->y] = player; // Flip piece to current player
+                current = current->next;
+            }
+        }
+
+        // Free memory used for the temporary list
+        remember->free(remember);
+        free(remember);
+    }
+}
+//
+
 bool isgame_over(struct Reversi *self){
     int number_of_cells = ROWS*COLUMNS;
     int coverd_cells = self->score_b + self->score_w;
@@ -139,6 +195,59 @@ bool isgame_over(struct Reversi *self){
 }
 
 
+
+
+bool isgame_over2(int game_matrix[ROWS][COLUMNS]){
+    int number_of_cells = ROWS*COLUMNS;
+    int score_b = 0;
+    int score_w = 0;
+    int coverd_cells = score_b + score_w;
+
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLUMNS; j++) {
+            if (game_matrix[i][j] == B) score_b++;
+            else if (game_matrix[i][j] == W) score_w++;
+        }
+    }
+    
+    if(coverd_cells == number_of_cells || score_b == 0 || score_w == 0){
+       return true;
+    }
+
+
+
+    bool board_full = true;
+    for (int row = 0; row < ROWS; row++) {
+        for (int col = 0; col < COLUMNS; col++) {
+            if (game_matrix[row][col] == 0) {
+                board_full = false;
+                break;
+            }
+        }
+        if (!board_full) break;
+    }
+    if (board_full) return true;
+    
+    struct MSet* W_possibile_moves = find_possible_moves(game_matrix,W);
+    struct MSet* B_possibile_moves = find_possible_moves(game_matrix,B);
+   
+    int W_Nmoves = W_possibile_moves->size;
+    int B_Nmoves = B_possibile_moves->size;
+    
+    W_possibile_moves->free(W_possibile_moves);
+    B_possibile_moves->free(B_possibile_moves);
+    free(W_possibile_moves);
+    free(B_possibile_moves);
+
+
+    if(W_Nmoves == 0 && B_Nmoves == 0 ){
+        return true;
+    }
+    
+    return false;
+
+}
+
 void next_player(struct Reversi *self){
     int next = (self->player == B)? W:B;
     struct MSet* avaible_actions = find_possible_moves(self->game_matrix,next);
@@ -150,6 +259,7 @@ void next_player(struct Reversi *self){
     avaible_actions->free(avaible_actions);
     free(avaible_actions);
 }
+
 void count_score(struct Reversi *self){
     int score_w = 0;
     int score_b = 0;
@@ -157,11 +267,9 @@ void count_score(struct Reversi *self){
         for(int j=0;j<COLUMNS;j++){
             if(self->game_matrix[i][j] == B){
                 score_b++;
-            }else if (self->game_matrix[i][j] == W)
-            {
+            }else if (self->game_matrix[i][j] == W){
                 score_w++;
-            }
-            
+            }      
         }
     }
     self->score_w = score_w;
@@ -221,8 +329,8 @@ bool is_valid_move(int board[ROWS][COLUMNS], int row, int col, int player) {
     }
 
     int directions[8][2] = {
-        {-1, -1}, {-1, 0}, {-1, 1},
-        {0, -1},          {0, 1},
+        {-1,-1}, {-1, 0},{-1,1},
+        {0,-1},          {0, 1},
         {1, -1}, {1, 0}, {1, 1}
     };
 

@@ -7,13 +7,13 @@
 #include "minmax.h"
 int main()
 {
-    int n = 4;
-    int player = B;
+    int n = 5;
+    int player = W;
     float number_of_success = 0;
 
     for (int i = 0; i < n; i++)
     {
-        int winner =  RandomPlayerWihtMinMaxAgent(player);
+        int winner =   MinMaxAgentWihtRandomPlayer( player);
         if (winner == player)
         {
             number_of_success+=1.0f;

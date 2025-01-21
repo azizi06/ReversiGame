@@ -3,7 +3,7 @@
 
 
 
-void playWihtMinMaxAgent();
-int RandomPlayerWihtMinMaxAgent(int player);
+//void playWihtMinMaxAgent();
+int  MinMaxAgentWihtRandomPlayer(int player);
 
 #endif
