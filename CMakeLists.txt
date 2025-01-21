@@ -15,7 +15,7 @@ src/Utils/move.c
 src/src/GameLoop.c
 src/src/reversi.c
 src/src/MinMax.c
-src/src/solver.c
+
 src/main.c
 )
 set(CMAKE_BUILD_TYPE Debug)

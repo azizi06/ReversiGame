@@ -4,6 +4,7 @@
 #include "Constants.h"
 #include "moveSet.h"
 #include"reversi.h"
+#define ABS(x) ((x) < 0 ? -(x) : (x))
 int print_matrix(int matrix[ROWS][COLUMNS]);
 int compare_2d_array(int arr1[ROWS][COLUMNS], int arr2[ROWS][COLUMNS]);
 void copy_2d_array(int destination[ROWS][COLUMNS], int origine[ROWS][COLUMNS]);

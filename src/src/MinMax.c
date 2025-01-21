@@ -6,6 +6,7 @@
 #include "reversi.h"
 #include"tools.h"
 #include"MinMax.h"
+
 // W min Player
 // B MAX Player
 float evaluate_board(int board[ROWS][COLUMNS], int player);
@@ -23,9 +24,9 @@ int Depth_Controller(int i){
     if(i<20){Depth = 3;}
     else if(i<30){Depth = 3;}
     else if(i<40){Depth = 4;}
-    else { Depth = 5;}
+    else { Depth = 3;}
 
-    //printf("\n i : %d , Depth : %d",i,Depth);
+    printf("\n i : %d , Depth : %d",i,Depth);
     return Depth;
 }
 float minimax(int board[ROWS][COLUMNS], int depth, bool maximizingPlayer, int player) {
@@ -37,30 +38,33 @@ float minimax(int board[ROWS][COLUMNS], int depth, bool maximizingPlayer, int pl
     struct msnode* current = available_actions->head;
 
     if (maximizingPlayer) {
-        float maxEval = -10000.0f;
+        // B player
+        float maxEval = -10003.0f;
         while (current != NULL) {
             struct Move* action = current->value;
-            struct MSet* changes = perform_action(board, action, player);
+            struct MSet* changes = perform_action(board, action, B);
             
-            float eval = minimax(board, depth - 1, false, -player);  // Recursively call minimax
-            undo_changes(board, action, changes, -player); 
+            float eval = minimax(board, depth - 1, false, W);  // Recursively call minimax
+            undo_changes(board, action, changes, W); 
             changes->free(changes);
             free(changes);
             if(1 == eval){ return eval;}
             maxEval = (eval > maxEval) ? eval : maxEval;
+
             current = current->next;
         }
         available_actions->free(available_actions);
         free(available_actions);
         return maxEval;
     } else {
+        // W
         float minEval = 10089.0f;
         while (current != NULL) {
             struct Move* action = current->value;
-            struct MSet* changes = perform_action(board, action, player);
+            struct MSet* changes = perform_action(board, action, W);
             
-            float eval = minimax(board, depth - 1, true, -player);  
-            undo_changes(board, action, changes, -player);  
+            float eval = minimax(board, depth - 1, true, B);  
+            undo_changes(board, action, changes, B);  
             changes->free(changes);
             free(changes);
             if(-1 == eval) return eval;
@@ -81,18 +85,26 @@ struct Move* best_move(int board[ROWS][COLUMNS], int player,int Depth) {
         bestValue = -10000.0f;}
     else if(player == W){
         //printf("\nW best value");
-          bestValue = 10000456.0f;
+          bestValue = 10000.0f;
     }
+
+    bool isMaximizing = (player == B) ?  true : false;
+
+
     int bestRow = -1, bestCol = -1;
     struct MSet* available_actions = find_possible_moves(board, player);
-    bool isMaximizing = (player == B) ?  true : false;
     if (available_actions->size == 0) {
         printf("ERROR : NO avaible actions found");
         return NULL;  // No available actions
     }
+    else{
+        printf("number of moves %d ",(int) available_actions->size );
+    }
 
     struct msnode* current = available_actions->head;
 
+    
+    
     while (current != NULL) {
         struct Move* action = current->value;
         struct MSet* changes = perform_action(board, action, player);
@@ -101,6 +113,7 @@ struct Move* best_move(int board[ROWS][COLUMNS], int player,int Depth) {
         
         undo_changes(board, action, changes, -player);  
         changes->free(changes);
+
         free(changes);
         if((player == B && moveValue == 1) || (player == W && moveValue == -1)){
             bestValue = moveValue;
@@ -135,7 +148,9 @@ struct Move* best_move(int board[ROWS][COLUMNS], int player,int Depth) {
     FILE *fp;
     fp = fopen("data.txt","a");
     fprintf(fp,"\nmove (%d,%d) : value : %f",bestRow,bestCol,bestValue);  
-    fclose(fp);
+    fclose(fp); 
+
+
     return new_move(bestRow, bestCol);  // Return the best move
 }
 
@@ -211,7 +226,7 @@ void undo_changes(int board[ROWS][COLUMNS],struct Move* move,struct MSet* change
     board[move->x][move->y] = E;
     struct msnode* current = changes->head;
     if(changes->size == 0){
-        printf("changes size is 0 ??");
+        printf("\nchanges size is 0 ??");
     }
     while (current != NULL)
     {
@@ -221,7 +236,6 @@ void undo_changes(int board[ROWS][COLUMNS],struct Move* move,struct MSet* change
     }
     
 }
-
 int count_stable_discs(int board[ROWS][COLUMNS], int player) {
     bool stable[ROWS][COLUMNS] = {false};  // Keep track of stable discs
     int stable_count = 0;
@@ -270,7 +284,6 @@ int count_stable_discs(int board[ROWS][COLUMNS], int player) {
 
     return stable_count;
 }
-
 void mark_stable(int board[ROWS][COLUMNS], bool stable[ROWS][COLUMNS], int player, int x, int y) {
     stable[x][y] = true;  
 
@@ -316,12 +329,12 @@ float evaluate_board(int board[ROWS][COLUMNS], int player) {
         } else if (score_w > score_b) {
             return -1.0f;  // White wins
         } else {
-            printf("game over");
+            printf("\ngame over");
             return 0.0f;   // Draw
         }
     }
 
- 
+// 
     int stable_b = count_stable_discs(board, B);
     int stable_w = count_stable_discs(board, W);
     
@@ -331,26 +344,35 @@ float evaluate_board(int board[ROWS][COLUMNS], int player) {
    
     int W_Nmoves = W_possibile_moves->size;
     int B_Nmoves = B_possibile_moves->size;
+    int mobility_b =  B_Nmoves;
+    int mobility_w =  W_Nmoves;
+
     
+    // free memory
     W_possibile_moves->free(W_possibile_moves);
     B_possibile_moves->free(B_possibile_moves);
     free(W_possibile_moves);
     free(B_possibile_moves);
-    int mobility_b =  B_Nmoves;
-    int mobility_w =  W_Nmoves;
+
+
 
     // Total number of discs and stable discs
     int total_discs = score_b + score_w;
     int max_discs = ROWS * COLUMNS;
 
     // Normalize disc count to [-1, 1]
-    float score_diff = (float)(score_b - score_w) / max_discs;
+    float score_diff = (float)  (ABS( score_b - score_w)) / max_discs;
 
     // Normalize stable disc count to [-1, 1]
-    float stable_diff = (float)(stable_b - stable_w) / max_discs;
+    float stable_diff = (float) ABS((stable_b - stable_w)) / max_discs;
 
     // Normalize mobility (available moves) to [-1, 1]
-    float mobility_diff = (float)(mobility_b - mobility_w) / (ROWS * COLUMNS);
+    float mobility_diff = (float) ABS((mobility_b - mobility_w)) / max_discs;
+   
+
+
+
+
 
     // Weighted evaluation: disc count, stability, and mobility
     float score_weight = 0.4f;   // Disc count weight
@@ -366,3 +388,15 @@ float evaluate_board(int board[ROWS][COLUMNS], int player) {
       // Returns a value between -1 and 1
 }
 
+
+
+
+struct Move* minimax_decision(int state[ROWS][COLUMNS],int depth){
+    
+} 
+float max_value(int state[ROWS][COLUMNS],int depth){
+
+}
+float min_value(int state[ROWS][COLUMNS],int depth){
+    
+}

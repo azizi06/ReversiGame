@@ -5,19 +5,16 @@
 #include <time.h>
 
 #include "minmax.h"
-
-// Function prototypes
-void print_board(int board[ROWS][COLUMNS]);
 int main()
 {
     int n = 4;
-    int player = W;
+    int player = B;
     float number_of_success = 0;
 
     for (int i = 0; i < n; i++)
     {
-        int winner = RandomPlayerWihtMinMaxAgent(player);
-        if (winner == B)
+        int winner =  RandomPlayerWihtMinMaxAgent(player);
+        if (winner == player)
         {
             number_of_success+=1.0f;
         }
