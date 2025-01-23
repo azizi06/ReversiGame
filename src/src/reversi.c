@@ -45,10 +45,11 @@ struct Reversi* new_reversi(){
         }
     } 
     //memset(r->game_matrix,0,sizeof(int[ROWS][COLUMNS]));
-    r->game_matrix[3][3]= W;
-    r->game_matrix[3][4]= B;
-    r->game_matrix[4][3]= B;
-    r->game_matrix[4][4]= W;
+    int mid = ROWS /2;
+    r->game_matrix[mid - 1][mid - 1]= W;
+    r->game_matrix[mid-1][mid]= B;
+    r->game_matrix[mid][mid-1]= B;
+    r->game_matrix[mid][mid]= W;
 
     return r;
 }
@@ -249,13 +250,16 @@ bool isgame_over2(int game_matrix[ROWS][COLUMNS]){
 }
 
 void next_player(struct Reversi *self){
-    int next = (self->player == B)? W:B;
+    const int next = (self->player == B)? W:B;
+
     struct MSet* avaible_actions = find_possible_moves(self->game_matrix,next);
-    if(!avaible_actions->size == 0){
-        self->player = next;
+    
+    if(avaible_actions == NULL){
+        return;
     }
-  // printf("The avaible actions for %d are %d self->player : %d",next,avaible_actions->size,self->player);
-     
+    if(avaible_actions->size > 0){
+        self->player = next;
+    }   
     avaible_actions->free(avaible_actions);
     free(avaible_actions);
 }

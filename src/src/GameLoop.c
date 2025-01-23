@@ -17,7 +17,6 @@ int MinMaxAgentWihtRandomPlayer(int player)
     while (!game->isgame_over(game))
     {
         struct Move move = {-1, -1};
-        //  game->print(game);
         if (game->player == player)
         { // ai player
             printf("\nai choosing a move...\n");
@@ -27,7 +26,9 @@ int MinMaxAgentWihtRandomPlayer(int player)
             struct Move *Agentmove = minimax_decision(tmp_game_matrix, player, Depth_Controller(i));
             if (Agentmove == NULL)
             {
-                printf("\nError: Agent No Move found");
+                printf("\nError: MinMax Agent No Move found");
+                continue;
+               
             }
             else
             {
@@ -41,6 +42,14 @@ int MinMaxAgentWihtRandomPlayer(int player)
 
             printf("\nRamdom player Choosing move ..");
             struct MSet *avaible_actions = find_possible_moves(game->game_matrix, -player);
+            if (avaible_actions->size == 0)
+            {
+                printf("\nRandome Player No Moves Found");
+                continue;
+
+
+            }
+            
             struct msnode *current = avaible_actions->head;
             // choosing random move :
             srand(time(NULL));
@@ -58,6 +67,7 @@ int MinMaxAgentWihtRandomPlayer(int player)
                 if (move.x == -1 || move.y == -1)
                 {
                     printf("\nERROR : Random Player Can Not Choose a Random Move");
+                    continue;
                 }
                 else
                 {
@@ -71,7 +81,11 @@ int MinMaxAgentWihtRandomPlayer(int player)
             free(avaible_actions);
         }
 
+
+        
         game->count(game);
+        //game->print(game);
+
         check_winner(game);
         game->next(game);
 

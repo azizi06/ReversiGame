@@ -12,12 +12,9 @@
 // B MAX Player
 float evaluate_board(int board[ROWS][COLUMNS], int player);
 float minimax(int board[ROWS][COLUMNS], int depth, bool maximizingPlayer, int player);
-struct Move *best_move(int board[ROWS][COLUMNS], int player, int Depth);
-
 void mark_stable(int board[ROWS][COLUMNS], bool stable[ROWS][COLUMNS], int player, int x, int y);
 int count_stable_discs(int board[ROWS][COLUMNS], int player);
 int Depth_Controller(int i);
-
 struct Move *minimax_decision(int state[ROWS][COLUMNS], int player, int depth);
 float min_value(int state[ROWS][COLUMNS], int player, int depth);
 float max_value(int state[ROWS][COLUMNS], int player, int depth);
@@ -216,10 +213,14 @@ struct Move *minimax_decision(int state[ROWS][COLUMNS], int player, int depth)
     float minmax_value = __FLT_MIN__;
     int best_x = -1;
     int best_y = -1;
-    struct MSet *avaible_actions = find_possible_moves(state, player);
-    struct msnode *current = avaible_actions->head;
+    struct MSet *available_actions = find_possible_moves(state, player);
+    struct msnode *current = available_actions->head;
 
-    while (current != NULL)
+    if (available_actions == NULL || available_actions->size == 0) {
+        return NULL;
+    }
+
+    while (current != NULL )
     {
 
         struct Move *current_action = current->value;
@@ -231,8 +232,8 @@ struct Move *minimax_decision(int state[ROWS][COLUMNS], int player, int depth)
 
         if (action_value == 1)
         {
-            avaible_actions->free(avaible_actions);
-            free(avaible_actions);
+            available_actions->free(available_actions);
+            free(available_actions);
             return new_move(current_action->x, current_action->y);
         }
 
@@ -241,14 +242,14 @@ struct Move *minimax_decision(int state[ROWS][COLUMNS], int player, int depth)
             best_x = current_action->x;
             best_y = current_action->y;
             minmax_value = action_value;
-            // printf("\n\nminmax val %d",minmax_value);
         }
 
         current = current->next;
     }
 
-    avaible_actions->free(avaible_actions);
-    free(avaible_actions);
+    available_actions->free(available_actions);
+    free(available_actions);
+
     if (best_x != -1 && best_y != -1)
     {
         return new_move(best_x, best_y);
@@ -262,8 +263,8 @@ float max_value(int state[ROWS][COLUMNS], int player, int depth)
         return evaluate_board(state, player);
     }
     float max_val = __FLT_MIN__;
-    struct MSet *avaible_actions = find_possible_moves(state, player);
-    struct msnode *current = avaible_actions->head;
+    struct MSet *available_actions = find_possible_moves(state, player);
+    struct msnode *current = available_actions->head;
 
     while (current != NULL)
     {
@@ -290,8 +291,8 @@ float max_value(int state[ROWS][COLUMNS], int player, int depth)
         current = current->next;
     }
 
-    avaible_actions->free(avaible_actions);
-    free(avaible_actions);
+    available_actions->free(available_actions);
+    free(available_actions);
     return max_val;
 }
 float min_value(int state[ROWS][COLUMNS], int player, int depth)
@@ -301,8 +302,8 @@ float min_value(int state[ROWS][COLUMNS], int player, int depth)
         return evaluate_board(state, player);
     }
     float min_val = __FLT_MAX__;
-    struct MSet *avaible_actions = find_possible_moves(state, -player);
-    struct msnode *current = avaible_actions->head;
+    struct MSet *available_actions = find_possible_moves(state, -player);
+    struct msnode *current = available_actions->head;
 
     while (current != NULL)
     {
@@ -328,7 +329,7 @@ float min_value(int state[ROWS][COLUMNS], int player, int depth)
         current = current->next;
     }
 
-    avaible_actions->free(avaible_actions);
-    free(avaible_actions);
+    available_actions->free(available_actions);
+    free(available_actions);
     return min_val;
 }

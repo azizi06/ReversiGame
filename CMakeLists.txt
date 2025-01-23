@@ -3,8 +3,6 @@ project(REVERSIGAME)
 
 # Define the source files
 include_directories("./src/include")
-include_directories("C:/msys64/mingw64/include")
-link_directories("C:/msys64/mingw64/lib")
 
 add_executable(${PROJECT_NAME} 
 src/Utils/map.c
@@ -20,9 +18,3 @@ src/main.c
 )
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g")
-target_link_libraries(${PROJECT_NAME}
-    raylib
-    opengl32
-    gdi32
-    winmm
-)
