@@ -7,7 +7,7 @@
 #include "minmax.h"
 int main()
 {
-    int n = 5;
+    int n = 100;
     int player = W;
     float number_of_success = 0;
 

@@ -1,7 +1,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
-#define ROWS  8
-#define COLUMNS  8
+#define ROWS  6
+#define COLUMNS  6
 #define W  -1  /**@breif  White player */
 #define B   1 /**@breif Black player */
 #define E 0 /**@breif Empty cell  */
