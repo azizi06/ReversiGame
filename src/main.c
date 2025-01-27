@@ -7,6 +7,10 @@
 #include "minmax.h"
 int main()
 {
+PlayAgainstMinMaxAgent(W);
+    return 0;
+}
+void testTheAlgorithme(){
     int n = 20;
     int player = W;
     float number_of_success = 0;
@@ -22,5 +26,4 @@ int main()
     float success_rate = number_of_success / (float)n;
     printf("\nnumber_of_success is %f",number_of_success);
     printf("\nsuccess rate is %f\n", success_rate);
-    return 0;
 }
